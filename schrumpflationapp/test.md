@@ -5,7 +5,6 @@
 * path start/
 * path produkteingabe/
 * path produktliste/
-* path supermarktergänzen/
 
 ## settings.py
 * INSTALLED_APPS
@@ -15,7 +14,7 @@
 ## Views
 * def get_kaufobjekt_list
 * def add_kaufobjekt
-* def add_supermarkt
+* def add_supermarkt --> löschen?
 * def add_produkt
 
 ## Models
@@ -37,7 +36,10 @@
     + Datum
 
 ## Template/HTML
-*  
+* kaufobjekt_list.html  
+* add_kaufobjekt.html
+* add_produkt.html
+
 
 ## Tags & Filter
 
