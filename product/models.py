@@ -43,7 +43,7 @@ class Purchase(models.Model):
     unit = models.CharField(max_length=2, choices=UNIT_CHOICES)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES)
-    purchase_date = models.DateTimeField()
+    purchase_date = models.DateField()
 
     def price_per_kg_or_l(self):
         if self.unit in ['kg', 'l']:
