@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Product Detail</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <h1>{{product.name}}</h1>
+        <p>{{product.brand}}</p>
+        <h2>Purchases</h2>
+        <ul>
+            {% for purchase in purchases %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Supermarket</th>
+                        <th>Size</th>
+                        <th>Price</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for purchase in purchases %}
+                    <tr>
+                        <td>{{ purchase.supermarket }}</td>
+                        <td>{{ purchase.size }}{{ purchase.unit }}</td>
+                        <td>{{ purchase.price }}{{ purchase.currency }}</td>
+                        <td>{{ purchase.purchase_date }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% empty %}
+                <li>No purchases yet.</li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>
