@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .models import Product, Purchase
 from django.db.models import Q
-
+from django.core.paginator import Paginator
 
 def product_detail(request, product_id):
     product = Product.objects.get(id=product_id)
@@ -17,5 +17,10 @@ def product_list(request):
             Q(brand__name__icontains=search_query)
         )
     else:
-        product_list = []
-    return render(request, 'product/index.html', {'product_list': product_list})
+        product_list = Product.objects.all()  
+
+    paginator = Paginator(product_list, 10)  # 10 products per page
+    page_number = request.GET.get('page')
+    products = paginator.get_page(page_number)
+
+    return render(request, 'product/index.html', {'products': products})
