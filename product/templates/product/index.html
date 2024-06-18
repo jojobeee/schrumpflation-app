@@ -77,17 +77,12 @@
     const searchField = document.getElementById("searchField");
     const searchButton = document.getElementById("searchButton");
 
-    // Function to disable or enable the button based on the search field's content
     function toggleButton() {
-      console.log("Input field value:", searchField.value.trim());
       searchButton.disabled = searchField.value.trim() === "";
-      console.log("Button disabled:", searchButton.disabled);
     }
 
-    // Initially disable the button if the search field is empty
     toggleButton();
 
-    // Add event listener for input on the search field
     searchField.addEventListener("input", toggleButton);
   });
 </script>
