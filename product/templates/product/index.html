@@ -1,15 +1,10 @@
 {% extends 'product/base.html' %} {% block body %}
 <h1>Products</h1>
 
-<form method="get">
-    <input type="text" name="search" value="{{ search_query }}" placeholder="Search products...">
-    <button type="submit" id="searchButton" >Search</button>
-    <button
-    type="button"
-    onclick="window.location.href=window.location.pathname;"
-  >
-    Reset
-  </button>
+<form method="get" id="searchForm">
+    <input type="text" id="searchField" name="search" value="{{ search_query }}" placeholder="Search products...">
+    <button type="submit" id="searchButton">Search</button>
+    <button type="button" onclick="window.location.href=window.location.pathname;">Reset</button>
     <select name="brand">
         <option value="">All Brands</option>
         {% for brand in brands %}
@@ -18,6 +13,7 @@
     </select>
     <button type="submit">Apply Filter</button>
 </form>
+
 {% if products %}
 <p>{{ products.paginator.count }} products found.</p>
 <table>
@@ -44,14 +40,8 @@
 <div class="pagination">
   <span class="step-links">
     {% if products.has_previous %}
-    <a
-      href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
-      >&laquo; first</a
-    >
-    <a
-      href="?page={{ products.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
-      >previous</a
-    >
+    <a href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">&laquo; first</a>
+    <a href="?page={{ products.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">previous</a>
     {% endif %}
 
     <span class="current">
@@ -59,14 +49,8 @@
     </span>
 
     {% if products.has_next %}
-    <a
-      href="?page={{ products.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
-      >next</a
-    >
-    <a
-      href="?page={{ products.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
-      >last &raquo;</a
-    >
+    <a href="?page={{ products.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">next</a>
+    <a href="?page={{ products.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">last &raquo;</a>
     {% endif %}
   </span>
 </div>
@@ -74,6 +58,7 @@
 {% else %}
 <p>No products found.</p>
 {% endif %}
+
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const searchField = document.getElementById("searchField");
