@@ -1,20 +1,22 @@
 {% extends 'product/base.html' %} {% block body %}
 <h1>Products</h1>
-<form method="GET" action=".">
-  <input
-    type="text"
-    id="searchField"
-    name="search"
-    placeholder="Search..."
-    value="{{ request.GET.search }}"
-  />
-  <button type="submit" id="searchButton" disabled>Search</button>
-  <button
+
+<form method="get">
+    <input type="text" name="search" value="{{ search_query }}" placeholder="Search products...">
+    <button type="submit" id="searchButton" >Search</button>
+    <button
     type="button"
     onclick="window.location.href=window.location.pathname;"
   >
     Reset
   </button>
+    <select name="brand">
+        <option value="">All Brands</option>
+        {% for brand in brands %}
+            <option value="{{ brand }}" {% if brand == selected_brand %}selected{% endif %}>{{ brand }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Apply Filter</button>
 </form>
 {% if products %}
 <p>{{ products.paginator.count }} products found.</p>
