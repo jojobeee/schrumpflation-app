@@ -1,11 +1,12 @@
 {% extends 'product/base.html' %} 
 {% block body %}
-<form method="get" id="searchForm" class="me-5 ms-5 mt-5 pt-4">
+<form method="get" id="searchForm" class="me-5 ms-5 mt-5 pt-4 mb-5">
   <div class="d-flex">
     <input class="form-control form-control-lg me-2" type="text" id="searchField" name="search" value="{{ search_query }}" placeholder="Search products or brands...">
-    <button class="btn btn-primary" type="submit" id="searchButton">Search</button>
+    <button class="btn btn-primary me-2" type="submit" id="searchButton">Search</button>
+    <button type="button" class="btn btn-secondary" onclick="window.location.href=window.location.pathname;">Reset</button>
   </div>
-
+  <p class="ms-3 mt-1">{{ products.paginator.count }} products found.</p>
   <select name="brand" class="form-select mt-2">
       <option value="">All Brands</option>
       {% for brand in brands %}
@@ -20,18 +21,17 @@
       {% endfor %}
   </select>
 
-  <button type="button" class="btn btn-secondary mt-2" onclick="window.location.href=window.location.pathname;">Reset</button>
 </form>
-
+<div class="me-5 ms-5 pe-5 ps-5">
 {% if products %}
-<p>{{ products.paginator.count }} products found.</p>
-<table>
+
+<table class="table">
   <thead>
     <tr>
       <th>Product Name</th>
       <th>Product Type</th>
       <th>Brand</th>
-      <th>Details</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -48,28 +48,58 @@
   </tbody>
 </table>
 
-<div class="pagination">
-  <span class="step-links">
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    <li class="page-item {% if not products.has_previous %}disabled{% endif %}">
+      <a class="page-link" href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" aria-label="First" {% if not products.has_previous %}tabindex="-1" aria-disabled="true"{% endif %}>
+        <span aria-hidden="true">&laquo; First</span>
+      </a>
+    </li>
+
     {% if products.has_previous %}
-    <a href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">&laquo; first</a>
-    <a href="?page={{ products.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">previous</a>
+    <li class="page-item">
+      <a class="page-link" href="?page={{ products.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" aria-label="Previous">
+        <span aria-hidden="true">Previous</span>
+      </a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+      <span class="page-link">Previous</span>
+    </li>
     {% endif %}
 
-    <span class="current">
-      Page {{ products.number }} of {{ products.paginator.num_pages }}.
-    </span>
+    {% for num in products.paginator.page_range %}
+      {% if products.number == num %}
+      <li class="page-item active"><a class="page-link" href="?page={{ num }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">{{ num }}</a></li>
+      {% else %}
+      <li class="page-item"><a class="page-link" href="?page={{ num }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">{{ num }}</a></li>
+      {% endif %}
+    {% endfor %}
 
     {% if products.has_next %}
-    <a href="?page={{ products.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">next</a>
-    <a href="?page={{ products.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">last &raquo;</a>
+    <li class="page-item">
+      <a class="page-link" href="?page={{ products.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" aria-label="Next">
+        <span aria-hidden="true">Next</span>
+      </a>
+    </li>
+    {% else %}
+    <li class="page-item disabled">
+      <span class="page-link">Next</span>
+    </li>
     {% endif %}
-  </span>
-</div>
+
+    <li class="page-item {% if not products.has_next %}disabled{% endif %}">
+      <a class="page-link" href="?page={{ products.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" aria-label="Last" {% if not products.has_next %}tabindex="-1" aria-disabled="true"{% endif %}>
+        <span aria-hidden="true">Last &raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
 
 {% else %}
 <p>No products found.</p>
 {% endif %}
-
+</div>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const searchField = document.getElementById("searchField");
