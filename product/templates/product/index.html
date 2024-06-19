@@ -1,25 +1,31 @@
 {% extends 'product/base.html' %} 
 {% block body %}
-<form method="get" id="searchForm" class="me-5 ms-5 mt-5 pt-4 mb-5">
+<form method="get" id="searchForm" class="me-5 ms-5 mt-5 pt-4">
   <div class="d-flex">
     <input class="form-control form-control-lg me-2" type="text" id="searchField" name="search" value="{{ search_query }}" placeholder="Search products or brands...">
     <button class="btn btn-primary me-2" type="submit" id="searchButton">Search</button>
     <button type="button" class="btn btn-secondary" onclick="window.location.href=window.location.pathname;">Reset</button>
   </div>
-  <p class="ms-3 mt-1">{{ products.paginator.count }} products found.</p>
-  <select name="brand" class="form-select mt-2">
-      <option value="">All Brands</option>
-      {% for brand in brands %}
-          <option value="{{ brand }}" {% if brand == selected_brand %}selected{% endif %}>{{ brand }}</option>
-      {% endfor %}
-  </select>
-
-  <select name="product_type" class="form-select mt-2">
-      <option value="">All Product Types</option>
-      {% for type in product_types %}
-      <option value="{{ type }}" {% if type == selected_product_type %}selected{% endif %}>{{ type }}</option>
-      {% endfor %}
-  </select>
+  <p class="ms-3 mt-1"><strong>{{ products.paginator.count }} Treffer gefunden</strong></p>
+  <div class="pe-5 ps-5 d-flex mb-2" style="gap: 2%;">
+    <div style="flex: 0 0 25%;">
+      <select name="brand" class="form-select mt-2 w-100">
+          <option value="">All Brands</option>
+          {% for brand in brands %}
+              <option value="{{ brand }}" {% if brand == selected_brand %}selected{% endif %}>{{ brand }}</option>
+          {% endfor %}
+      </select>
+    </div>
+  
+    <div style="flex: 0 0 25%;">
+      <select name="product_type" class="form-select mt-2 w-100">
+          <option value="">All Product Types</option>
+          {% for type in product_types %}
+          <option value="{{ type }}" {% if type == selected_product_type %}selected{% endif %}>{{ type }}</option>
+          {% endfor %}
+      </select>
+    </div>
+</div>
 
 </form>
 <div class="me-5 ms-5 pe-5 ps-5">
