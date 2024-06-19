@@ -29,6 +29,8 @@ def product_list(request):
     if product_type_filter:
         product_list = product_list.filter(product_type__icontains=product_type_filter)
 
+    product_list = product_list.order_by('id')
+
     paginator = Paginator(product_list, 10)
     page_number = request.GET.get('page')
     products = paginator.get_page(page_number)
