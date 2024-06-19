@@ -17,8 +17,8 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         {% block body %}
-        <h1>{{product.name}}</h1>
-        <p>{{product.brand}}</p>
+        <h1>Product: {{product.name}}</h1>
+        <p>Brand: {{product.brand}}</p>
         <h2>Purchases</h2>
         <ul>
             {% for purchase in purchases %}
