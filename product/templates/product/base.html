@@ -19,12 +19,12 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
         <nav class="navbar navbar-dark bg-dark">
-            <a href="#" class="navbar-brand">Product</a>
-            <div class="navbar">
-                <a class="nav-item" href="{% url 'product:index' %}">Products</a>
+            <a href="{% url 'product:index' %}" class="navbar-brand ps-2">die Schrumpflationsapp</a>
+            {% comment %} <div class="navbar">
+                <a class="nav-item" href="#">Products</a>
                 <a class="nav-item" href="#">Placeholder</a>
                 <a class="nav-item" href="#">Placeholder</a>
-            </div>
+            </div> {% endcomment %}
         </nav>
         {% block body %}
         {% endblock %}
