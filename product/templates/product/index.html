@@ -20,6 +20,7 @@
   <thead>
     <tr>
       <th>Product Name</th>
+      <th>Product Type</th>
       <th>Brand</th>
       <th>Details</th>
     </tr>
@@ -28,6 +29,7 @@
     {% for product in products %}
     <tr>
       <td>{{ product.name }}</td>
+      <td>{{ product.product_type }}</td>
       <td>{{ product.brand.name }}</td>
       <td>
         <a href="{% url 'product:product_detail' product.id %}">View Details</a>
