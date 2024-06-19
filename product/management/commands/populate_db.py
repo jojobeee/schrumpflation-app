@@ -14,10 +14,10 @@ class Command(BaseCommand):
         Purchase.objects.all().delete()
 
         supermarkets = [
-            Supermarket(name='Edeka', address='Teststr. 1', city='Berlin', postal_code='10963', country='Deutschland'),
-            Supermarket(name='Rewe', address='Teststr. 2', city='Frankfurt', postal_code='60311', country='Deutschland'),
-            Supermarket(name='Aldi', address='Teststr. 3', city='München', postal_code='80336', country='Deutschland'),
-            Supermarket(name='Lidl', address='Teststr. 4', city='Köln', postal_code='50672', country='Deutschland')
+            Supermarket(name='Edeka'),
+            Supermarket(name='Rewe'),
+            Supermarket(name='Aldi'),
+            Supermarket(name='Lidl')
         ]
         Supermarket.objects.bulk_create(supermarkets)
         print("Supermarkets created")
@@ -31,10 +31,10 @@ class Command(BaseCommand):
         print("Brands created")
 
         products = [
-            Product(name='Milchreis', brand=Brand.objects.get(name='Ory')),
-            Product(name='Fructis Shampoo', brand=Brand.objects.get(name='Garnier')),
-            Product(name='Fructis Spülung', brand=Brand.objects.get(name='Garnier')),
-            Product(name='Mjölkchoklad', brand=Brand.objects.get(name='Marabou')),
+            Product(name='Milchreis', product_type="Milchreis", brand=Brand.objects.get(name='Ory')),
+            Product(name='Fructis Shampoo', product_type="Shampoo", brand=Brand.objects.get(name='Garnier')),
+            Product(name='Fructis Spülung', product_type="Spülung", brand=Brand.objects.get(name='Garnier')),
+            Product(name='Mjölkchoklad', product_type="Schokolade", brand=Brand.objects.get(name='Marabou')),
         ]
         Product.objects.bulk_create(products)
         print("Products created")
