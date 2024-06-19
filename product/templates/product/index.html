@@ -2,9 +2,9 @@
 {% block body %}
 <form method="get" id="searchForm" class="me-5 ms-5 mt-5 pt-4">
   <div class="d-flex">
-    <input class="form-control form-control-lg me-2" type="text" id="searchField" name="search" value="{{ search_query }}" placeholder="Search products or brands...">
-    <button class="btn btn-primary me-2" type="submit" id="searchButton">Search</button>
-    <button type="button" class="btn btn-secondary" onclick="window.location.href=window.location.pathname;">Reset</button>
+    <input class="form-control form-control-lg me-2" type="text" id="searchField" name="search" value="{{ search_query }}" placeholder="Suche nach Produktnamen oder Marken...">
+    <button class="btn btn-primary me-2" type="submit" id="searchButton">Suche</button>
+    <button type="button" class="btn btn-secondary" onclick="window.location.href=window.location.pathname;">Zurücksetzen</button>
   </div>
 
   <p class="ms-3 mt-1"><strong>{{ products.paginator.count }} Treffer gefunden</strong></p>
@@ -14,7 +14,7 @@
     {% if search_query %}
     <div style="flex: 0 0 25%;">
       <select name="brand" class="form-select mt-2 w-100">
-          <option value="">All Brands</option>
+          <option value="">Alle Marken</option>
           {% for brand in brands %}
               <option value="{{ brand }}" {% if brand == selected_brand %}selected{% endif %}>{{ brand }}</option>
           {% endfor %}
@@ -23,7 +23,7 @@
   
     <div style="flex: 0 0 25%;">
       <select name="product_type" class="form-select mt-2 w-100">
-          <option value="">All Product Types</option>
+          <option value="">Alle Produktarten</option>
           {% for type in product_types %}
           <option value="{{ type }}" {% if type == selected_product_type %}selected{% endif %}>{{ type }}</option>
           {% endfor %}
@@ -40,9 +40,9 @@
   <table class="table">
     <thead>
       <tr>
-        <th>Product Name</th>
-        <th>Product Type</th>
-        <th>Brand</th>
+        <th>Produktname</th>
+        <th>Produktart</th>
+        <th>Marke</th>
         <th></th>
       </tr>
     </thead>
@@ -53,7 +53,7 @@
         <td>{{ product.product_type }}</td>
         <td>{{ product.brand.name }}</td>
         <td>
-          <a href="{% url 'product:product_detail' product.id %}">View Details</a>
+          <a href="{% url 'product:product_detail' product.id %}">Mehr Details</a>
         </td>
       </tr>
       {% endfor %}
@@ -64,19 +64,19 @@
     <ul class="pagination">
       <li class="page-item {% if not products.has_previous %}disabled{% endif %}">
         <a class="page-link" href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" aria-label="First" {% if not products.has_previous %}tabindex="-1" aria-disabled="true"{% endif %}>
-          <span aria-hidden="true">&laquo; First</span>
+          <span aria-hidden="true">&laquo; Erste</span>
         </a>
       </li>
 
       {% if products.has_previous %}
       <li class="page-item">
         <a class="page-link" href="?page={{ products.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" aria-label="Previous">
-          <span aria-hidden="true">Previous</span>
+          <span aria-hidden="true">Vorherige</span>
         </a>
       </li>
       {% else %}
       <li class="page-item disabled">
-        <span class="page-link">Previous</span>
+        <span class="page-link">Vorherige</span>
       </li>
       {% endif %}
 
@@ -91,18 +91,18 @@
       {% if products.has_next %}
       <li class="page-item">
         <a class="page-link" href="?page={{ products.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" aria-label="Next">
-          <span aria-hidden="true">Next</span>
+          <span aria-hidden="true">Nächste</span>
         </a>
       </li>
       {% else %}
       <li class="page-item disabled">
-        <span class="page-link">Next</span>
+        <span class="page-link">Nächste</span>
       </li>
       {% endif %}
 
       <li class="page-item {% if not products.has_next %}disabled{% endif %}">
         <a class="page-link" href="?page={{ products.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" aria-label="Last" {% if not products.has_next %}tabindex="-1" aria-disabled="true"{% endif %}>
-          <span aria-hidden="true">Last &raquo;</span>
+          <span aria-hidden="true">Letzte &raquo;</span>
         </a>
       </li>
     </ul>
