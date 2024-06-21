@@ -2,139 +2,273 @@
 {% load custom_filters %}
 
 {% block body %}
-
 <form method="post" class="container mt-5">
-    {% csrf_token %}
-    {% if form.non_field_errors %}
-        <div class="alert alert-danger">
-            {% for error in form.non_field_errors %}
-                <div>{{ error }}</div>
-            {% endfor %}
-        </div>
-    {% endif %}
-
-    {% for field in form %}
-        {% if field.errors %}
-            <div class="alert alert-danger">
-                {% for error in field.errors %}
-                    <div>{{ error }}</div>
-                {% endfor %}
-            </div>
-        {% endif %}
+  {% csrf_token %}
+  
+  {% if form.non_field_errors %}
+  <div class="alert alert-danger">
+    {% for error in form.non_field_errors %}
+    <div>{{ error }}</div>
     {% endfor %}
-    <div class="row mb-3">
-        <div class="col-md-6">
-            <label for="product-name" class="form-label">Produktname:</label>
-            {{ form.product_name|add_class:"form-control" }}
-        </div>
-        <div class="col-md-6">
-            <label for="new_product_type" class="form-label">Produktart:</label>
-            {{ form.new_product_type|add_class:"form-control" }}
-        </div>
+  </div>
+  {% endif %}
+  
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="product-name" class="form-label">Produktname:</label>
+      <input type="text" id="product-name" name="product_name" class="form-control {% if form.product_name.errors %}is-invalid{% endif %}" value="{% if form.product_name.value %}{{ form.product_name.value }}{% endif %}" autocomplete="off" required />
+      {% if form.product_name.errors %}
+      <div class="invalid-feedback">
+        {% for error in form.product_name.errors %}
+        <div>{{ error }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
     </div>
-    <div class="row mb-3">
-        <div class="col-md-6">
-            <label for="existing_brand" class="form-label">Marke:</label>
-            {{ form.existing_brand|add_class:"form-select" }}
-        </div>
-        <div class="col-md-6">
-            <label for="new_brand" class="form-label">oder neue Marke hinzufügen:</label>
-            {{ form.new_brand|add_class:"form-control" }}
-        </div>
+    <div class="col-md-6">
+      <label for="new_product_type" class="form-label">Produktart:</label>
+      <input type="text" id="new_product_type" name="new_product_type" class="form-control {% if form.new_product_type.errors %}is-invalid{% endif %}" value="{% if form.new_product_type.value %}{{ form.new_product_type.value }}{% endif %}" required />
+      {% if form.new_product_type.errors %}
+      <div class="invalid-feedback">
+        {% for error in form.new_product_type.errors %}
+        <div>{{ error }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
     </div>
-    <div class="row mb-3">
-        <div class="col-md-6">
-            <label for="existing_supermarket" class="form-label">Supermarkt:</label>
-            {{ form.existing_supermarket|add_class:"form-select" }}
-        </div>
-        <div class="col-md-6">
-            <label for="new_supermarket" class="form-label">oder neuen Supermarkt hinzufügen:</label>
-            {{ form.new_supermarket|add_class:"form-control" }}
-        </div>
+  </div>
+  
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="existing_brand" class="form-label">Marke:</label>
+      <select id="existing_brand" name="existing_brand" class="form-select {% if form.existing_brand.errors %}is-invalid{% endif %}">
+        <option value="" {% if not form.existing_brand.value %}selected{% endif %}>Marke auswählen</option>
+        {% for brand in brands %}
+        <option value="{{ brand.id }}" {% if form.existing_brand.value == brand.id %}selected{% endif %}>{{ brand.name }}</option>
+        {% endfor %}
+      </select>
+      {% if form.existing_brand.errors %}
+      <div class="invalid-feedback">
+        {% for error in form.existing_brand.errors %}
+        <div>{{ error }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
     </div>
-    <div class="row mb-3">
-        <div class="col-md-3">
-            <label for="size" class="form-label">Größe:</label>
-            {{ form.size|add_class:"form-control" }}
-        </div>
-        <div class="col-md-3">
-            <label for="unit" class="form-label">Einheit:</label>
-            {{ form.unit|add_class:"form-control" }}
-        </div>
-        <div class="col-md-3">
-            <label for="price" class="form-label">Preis:</label>
-            {{ form.price|add_class:"form-control" }}
-        </div>
-        <div class="col-md-3">
-            <label for="currency" class="form-label">Währung:</label>
-            {{ form.currency|add_class:"form-select" }}
-        </div>
+    <div class="col-md-6">
+      <label for="new_brand" class="form-label">oder neue Marke hinzufügen:</label>
+      <input type="text" id="new_brand" name="new_brand" class="form-control {% if form.new_brand.errors %}is-invalid{% endif %}" value="{% if form.new_brand.value %}{{ form.new_brand.value }}{% endif %}" />
+      {% if form.new_brand.errors %}
+      <div class="invalid-feedback">
+        {% for error in form.new_brand.errors %}
+        <div>{{ error }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
     </div>
-    <div class="row mb-3">
-        <div class="col-md-6">
-            <label for="purchase_date" class="form-label">Kaufdatum:</label>
-            {{ form.purchase_date|add_class:"form-control" }}
-        </div>
+  </div>
+  
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="existing_supermarket" class="form-label">Supermarkt:</label>
+      <select id="existing_supermarket" name="existing_supermarket" class="form-select {% if form.existing_supermarket.errors %}is-invalid{% endif %}">
+        <option value="" {% if not form.existing_supermarket.value %}selected{% endif %}>Supermarkt auswählen</option>
+        {% for supermarket in supermarkets %}
+        <option value="{{ supermarket.id }}" {% if form.existing_supermarket.value == supermarket.id %}selected{% endif %}>{{ supermarket.name }}</option>
+        {% endfor %}
+      </select>
+      {% if form.existing_supermarket.errors %}
+      <div class="invalid-feedback">
+        {% for error in form.existing_supermarket.errors %}
+        <div>{{ error }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
     </div>
-    <div class="text-center">
-        <button type="submit" class="btn btn-primary mt-4 btn-lg">Absenden</button>
+    <div class="col-md-6">
+      <label for="new_supermarket" class="form-label">oder neuen Supermarkt hinzufügen:</label>
+      <input type="text" id="new_supermarket" name="new_supermarket" class="form-control {% if form.new_supermarket.errors %}is-invalid{% endif %}" value="{% if form.new_supermarket.value %}{{ form.new_supermarket.value }}{% endif %}" />
+      {% if form.new_supermarket.errors %}
+      <div class="invalid-feedback">
+        {% for error in form.new_supermarket.errors %}
+        <div>{{ error }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
     </div>
+  </div>
+  
+  <div class="row mb-3">
+    <div class="col-md-3">
+      <label for="size" class="form-label">Größe:</label>
+      <input type="number" step="0.01" id="size" name="size" class="form-control {% if form.size.errors %}is-invalid{% endif %}" value="{% if form.size.value %}{{ form.size.value }}{% endif %}" required />
+      {% if form.size.errors %}
+      <div class="invalid-feedback">
+        {% for error in form.size.errors %}
+        <div>{{ error }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    <div class="col-md-3">
+      <label for="unit" class="form-label">Einheit:</label>
+      <select id="unit" name="unit" class="form-select {% if form.unit.errors %}is-invalid{% endif %}">
+        <option value="kg" {% if form.unit.value == 'kg' %}selected{% endif %}>Kilogramm</option>
+        <option value="g" {% if form.unit.value == 'g' %}selected{% endif %}>Gramm</option>
+        <option value="l" {% if form.unit.value == 'l' %}selected{% endif %}>Liter</option>
+        <option value="ml" {% if form.unit.value == 'ml' %}selected{% endif %}>Milliliter</option>
+      </select>
+      {% if form.unit.errors %}
+      <div class="invalid-feedback">
+        {% for error in form.unit.errors %}
+        <div>{{ error }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    <div class="col-md-3">
+      <label for="price" class="form-label">Preis:</label>
+      <input type="number" step="0.01" id="price" name="price" class="form-control {% if form.price.errors %}is-invalid{% endif %}" value="{% if form.price.value %}{{ form.price.value }}{% endif %}" required />
+      {% if form.price.errors %}
+      <div class="invalid-feedback">
+        {% for error in form.price.errors %}
+        <div>{{ error }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    <div class="col-md-3">
+      <label for="currency" class="form-label">Währung:</label>
+      <select id="currency" name="currency" class="form-select {% if form.currency.errors %}is-invalid{% endif %}">
+        <option value="USD" {% if form.currency.value == 'USD' %}selected{% endif %}>US Dollar</option>
+        <option value="EUR" {% if form.currency.value == 'EUR' %}selected{% endif %}>Euro</option>
+        <option value="GBP" {% if form.currency.value == 'GBP' %}selected{% endif %}>British Pound</option>
+      </select>
+      {% if form.currency.errors %}
+      <div class="invalid-feedback">
+        {% for error in form.currency.errors %}
+        <div>{{ error }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="purchase_date" class="form-label">Kaufdatum:</label>
+      <input type="date" id="purchase_date" name="purchase_date" class="form-control {% if form.purchase_date.errors %}is-invalid{% endif %}" value="{% if form.purchase_date.value %}{{ form.purchase_date.value }}{% endif %}" required />
+      {% if form.purchase_date.errors %}
+      <div class="invalid-feedback">
+        {% for error in form.purchase_date.errors %}
+        <div>{{ error }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  
+  <div class="text-center">
+    <button type="submit" class="btn btn-primary mt-4 btn-lg">Absenden</button>
+  </div>
 </form>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <script>
-    $(function() {
-        $('#product-name').autocomplete({
-            source: '{% url "product:autocomplete_products" %}',
-            minLength: 2,
-            select: function(event, ui) {
-                $('#product-name').val(ui.item.value);
+  $(function () {
+    $('#product-name').autocomplete({
+      source: '{% url "product:autocomplete_products" %}',
+      minLength: 2,
+      select: function (event, ui) {
+        $('#product-name').val(ui.item.value);
+        $.ajax({
+          url: '{% url "product:product_details" %}',
+          data: {
+            'product_name': ui.item.value
+          },
+          dataType: 'json',
+          success: function (data) {
+            $('#new_product_type').val(data.product_type);
+            if (data.brand_id) {
+              $('#existing_brand').val(data.brand_id).change();
+              $('#new_brand').val('').prop('disabled', true);
+            } else {
+              $('#existing_brand').val('').change();
+              $('#new_brand').prop('disabled', false);
             }
+
+            if (data.supermarket_id) {
+              $('#existing_supermarket').val(data.supermarket_id).change();
+              $('#new_supermarket').val('').prop('disabled', true);
+            } else {
+              $('#existing_supermarket').val('').change();
+              $('#new_supermarket').prop('disabled', false);
+            }
+          },
+          error: function (xhr, status, error) {
+            console.error(error);
+          }
         });
+      }
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
-        var newBrandInput = document.querySelector('[name="new_brand"]');
-        var existingBrandSelect = document.querySelector('[name="existing_brand"]');
-        var newSupermarketInput = document.querySelector('[name="new_supermarket"]');
-        var existingSupermarketSelect = document.querySelector('[name="existing_supermarket"]');
+    var newBrandInput = document.querySelector('[name="new_brand"]');
+    var existingBrandSelect = document.querySelector('[name="existing_brand"]');
+    var newSupermarketInput = document.querySelector('[name="new_supermarket"]');
+    var existingSupermarketSelect = document.querySelector('[name="existing_supermarket"]');
 
-        existingBrandSelect.addEventListener('change', function() {
-            if (existingBrandSelect.value) {
-                newBrandInput.value = '';
-                newBrandInput.disabled = true;
-            } else {
-                newBrandInput.disabled = false;
-            }
-        });
+    function checkInitialValues() {
+      if (existingBrandSelect.value) {
+        newBrandInput.disabled = true;
+      } else {
+        newBrandInput.disabled = false;
+      }
 
-        newBrandInput.addEventListener('input', function() {
-            if (newBrandInput.value) {
-                existingBrandSelect.value = '';
-                existingBrandSelect.disabled = true;
-            } else {
-                existingBrandSelect.disabled = false;
-            }
-        });
+      if (existingSupermarketSelect.value) {
+        newSupermarketInput.disabled = true;
+      } else {
+        newSupermarketInput.disabled = false;
+      }
+    }
 
-        existingSupermarketSelect.addEventListener('change', function() {
-            if (existingSupermarketSelect.value) {
-                newSupermarketInput.value = '';
-                newSupermarketInput.disabled = true;
-            } else {
-                newSupermarketInput.disabled = false;
-            }
-        });
+    checkInitialValues();
 
-        newSupermarketInput.addEventListener('input', function() {
-            if (newSupermarketInput.value) {
-                existingSupermarketSelect.value = '';
-                existingSupermarketSelect.disabled = true;
-            } else {
-                existingSupermarketSelect.disabled = false;
-            }
-        });
+    existingBrandSelect.addEventListener('change', function() {
+      if (existingBrandSelect.value) {
+        newBrandInput.value = '';
+        newBrandInput.disabled = true;
+      } else {
+        newBrandInput.disabled = false;
+      }
     });
+
+    newBrandInput.addEventListener('input', function() {
+      if (newBrandInput.value) {
+        existingBrandSelect.value = '';
+        existingBrandSelect.disabled = true;
+      } else {
+        existingBrandSelect.disabled = false;
+      }
+    });
+
+    existingSupermarketSelect.addEventListener('change', function() {
+      if (existingSupermarketSelect.value) {
+        newSupermarketInput.value = '';
+        newSupermarketInput.disabled = true;
+      } else {
+        newSupermarketInput.disabled = false;
+      }
+    });
+
+    newSupermarketInput.addEventListener('input', function() {
+      if (newSupermarketInput.value) {
+        existingSupermarketSelect.value = '';
+        existingSupermarketSelect.disabled = true;
+      } else {
+        existingSupermarketSelect.disabled = false;
+      }
+    });
+  });
 </script>
 {% endblock %}

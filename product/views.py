@@ -63,7 +63,6 @@ def add_purchase(request):
     if request.method == 'POST':
         form = CombinedAddSchrumpflationForm(request.POST)
         if form.is_valid():
-
             brand = form.cleaned_data['existing_brand']
             if not brand and form.cleaned_data['new_brand']:
                 brand, created = Brand.objects.get_or_create(name=form.cleaned_data['new_brand'])
@@ -95,7 +94,15 @@ def add_purchase(request):
     else:
         form = CombinedAddSchrumpflationForm()
 
-    return render(request, 'product/add_purchase.html', {'form': form})
+    brands = Brand.objects.all().order_by('name')
+    supermarkets = Supermarket.objects.all().order_by('name')
+
+    return render(request, 'product/add_purchase.html', {
+        'form': form,
+        'brands': brands,
+        'supermarkets': supermarkets
+    })
+
 
 @require_GET
 def autocomplete_products(request):
@@ -104,3 +111,15 @@ def autocomplete_products(request):
         products = list(qs.values_list('name', flat=True))
         return JsonResponse(products, safe=False)
     return JsonResponse([], safe=False)
+
+def product_details(request):
+    product_name = request.GET.get('product_name', None)
+    if product_name:
+        product = Product.objects.filter(name__iexact=product_name).first()
+        if product:
+            return JsonResponse({
+                'product_type': product.product_type,
+                'brand_id': product.brand.id if product.brand else None,  
+                'brand_name': product.brand.name if product.brand else ''  
+            })
+    return JsonResponse({}, status=400)
