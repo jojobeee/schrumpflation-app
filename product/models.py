@@ -56,3 +56,5 @@ class Purchase(models.Model):
     @property
     def price_per_kg_or_l_display(self):
         return self.price_per_kg_or_l() if self.price_per_kg_or_l() is not None else 'N/A'
+
+      

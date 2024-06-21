@@ -3,10 +3,24 @@ from .models import Product, Purchase
 from django.db.models import Q
 from django.core.paginator import Paginator
 
+from django_tables2 import SingleTableView
+import django_tables2 as tables
+from django_tables2 import RequestConfig
+
+from .tables import PurchaseTable
+
+
 def product_detail(request, product_id):
     product = Product.objects.get(id=product_id)
     purchases = Purchase.objects.filter(product=product)
-    context = {'product': product,'purchases': purchases,}
+
+    queryset = Purchase.objects.all()
+    table = PurchaseTable(queryset)
+    RequestConfig(request).configure(table)
+    
+    context = {'product': product,'purchases': purchases, 'table': table}
+
+
     return render(request, 'product/productDetail.html', context)
 
 def product_list(request):
@@ -55,3 +69,4 @@ def product_list(request):
         'selected_product_type': product_type_filter,
         'search_query': search_query
     })
+

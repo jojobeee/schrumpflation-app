@@ -1,28 +1,14 @@
-{% extends 'product/base.html' %} {% block body %}
+{% extends 'product/base.html' %}
+{% load render_table from django_tables2 %} 
+
+{% block body %}
 <h1>{{product.name}}</h1>
-<p>{{product.brand}}</p>
-<h2>Purchases</h2>
-{% if purchases %}
-<table>
-  <thead>
-    <tr>
-      <th>Supermarket</th>
-      <th>Size</th>
-      <th>Price</th>
-      <th>Date</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for purchase in purchases %}
-    <tr>
-      <td>{{ purchase.supermarket }}</td>
-      <td>{{ purchase.size }}{{ purchase.unit }}</td>
-      <td>{{ purchase.price }}{{ purchase.currency }}</td>
-      <td>{{ purchase.purchase_date }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-<p>No purchases yet.</p>
-{% endif %} {% endblock %}
+
+  <div class = "container">
+    <h2> Test der List </h2>
+    <h2>{{product.brand}}</h2>
+    <p>---</p>
+    {% render_table table %}
+  </div>
+
+{% endblock %}
