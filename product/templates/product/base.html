@@ -21,11 +21,7 @@
         <![endif]-->
         <nav class="navbar navbar-dark bg-dark">
             <a href="{% url 'product:index' %}" class="navbar-brand ps-2">die Schrumpflationsapp</a>
-            {% comment %} <div class="navbar">
-                <a class="nav-item" href="#">Products</a>
-                <a class="nav-item" href="#">Placeholder</a>
-                <a class="nav-item" href="#">Placeholder</a>
-            </div> {% endcomment %}
+            <a href="{% url 'product:add' %}" class="btn btn-primary">Schrumpflation hinzufügen</a>
         </nav>
         {% block body %}
         {% endblock %}

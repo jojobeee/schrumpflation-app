@@ -1,7 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Product, Purchase
 from django.db.models import Q
 from django.core.paginator import Paginator
+from .forms import PurchaseForm, ProductForm
+from .models import Product
 
 def product_detail(request, product_id):
     product = Product.objects.get(id=product_id)
@@ -55,3 +57,16 @@ def product_list(request):
         'selected_product_type': product_type_filter,
         'search_query': search_query
     })
+
+def add_purchase(request):
+    product_form = ProductForm()
+    purchase_form = PurchaseForm()
+    if request.method == 'POST':
+        if product_form.is_valid() and purchase_form.is_valid():
+            product = product_form.save()
+            purchase = purchase_form.save(commit=False)
+            purchase.product = product
+            purchase.save()
+            return redirect('product:index') 
+        
+    return render(request, 'product/add_purchase.html', {'product_form': product_form, 'purchase_form': purchase_form})
