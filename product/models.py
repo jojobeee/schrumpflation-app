@@ -28,8 +28,8 @@ class Purchase(models.Model):
     ]
     
     UNIT_CHOICES = [
-        ('kg', 'Kilogram'),
-        ('g', 'Gram'),
+        ('kg', 'Kilogramm'),
+        ('g', 'Gramm'),
         ('l', 'Liter'),
         ('ml', 'Milliliter'),
     ]

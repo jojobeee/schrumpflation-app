@@ -1,0 +1,140 @@
+{% extends 'product/base.html' %}
+{% load custom_filters %}
+
+{% block body %}
+
+<form method="post" class="container mt-5">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            {% for error in form.non_field_errors %}
+                <div>{{ error }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% for field in form %}
+        {% if field.errors %}
+            <div class="alert alert-danger">
+                {% for error in field.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endfor %}
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label for="product-name" class="form-label">Produktname:</label>
+            {{ form.product_name|add_class:"form-control" }}
+        </div>
+        <div class="col-md-6">
+            <label for="new_product_type" class="form-label">Produktart:</label>
+            {{ form.new_product_type|add_class:"form-control" }}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label for="existing_brand" class="form-label">Marke:</label>
+            {{ form.existing_brand|add_class:"form-select" }}
+        </div>
+        <div class="col-md-6">
+            <label for="new_brand" class="form-label">oder neue Marke hinzufügen:</label>
+            {{ form.new_brand|add_class:"form-control" }}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label for="existing_supermarket" class="form-label">Supermarkt:</label>
+            {{ form.existing_supermarket|add_class:"form-select" }}
+        </div>
+        <div class="col-md-6">
+            <label for="new_supermarket" class="form-label">oder neuen Supermarkt hinzufügen:</label>
+            {{ form.new_supermarket|add_class:"form-control" }}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <label for="size" class="form-label">Größe:</label>
+            {{ form.size|add_class:"form-control" }}
+        </div>
+        <div class="col-md-3">
+            <label for="unit" class="form-label">Einheit:</label>
+            {{ form.unit|add_class:"form-control" }}
+        </div>
+        <div class="col-md-3">
+            <label for="price" class="form-label">Preis:</label>
+            {{ form.price|add_class:"form-control" }}
+        </div>
+        <div class="col-md-3">
+            <label for="currency" class="form-label">Währung:</label>
+            {{ form.currency|add_class:"form-select" }}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label for="purchase_date" class="form-label">Kaufdatum:</label>
+            {{ form.purchase_date|add_class:"form-control" }}
+        </div>
+    </div>
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary mt-4 btn-lg">Absenden</button>
+    </div>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script>
+    $(function() {
+        $('#product-name').autocomplete({
+            source: '{% url "product:autocomplete_products" %}',
+            minLength: 2,
+            select: function(event, ui) {
+                $('#product-name').val(ui.item.value);
+            }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var newBrandInput = document.querySelector('[name="new_brand"]');
+        var existingBrandSelect = document.querySelector('[name="existing_brand"]');
+        var newSupermarketInput = document.querySelector('[name="new_supermarket"]');
+        var existingSupermarketSelect = document.querySelector('[name="existing_supermarket"]');
+
+        existingBrandSelect.addEventListener('change', function() {
+            if (existingBrandSelect.value) {
+                newBrandInput.value = '';
+                newBrandInput.disabled = true;
+            } else {
+                newBrandInput.disabled = false;
+            }
+        });
+
+        newBrandInput.addEventListener('input', function() {
+            if (newBrandInput.value) {
+                existingBrandSelect.value = '';
+                existingBrandSelect.disabled = true;
+            } else {
+                existingBrandSelect.disabled = false;
+            }
+        });
+
+        existingSupermarketSelect.addEventListener('change', function() {
+            if (existingSupermarketSelect.value) {
+                newSupermarketInput.value = '';
+                newSupermarketInput.disabled = true;
+            } else {
+                newSupermarketInput.disabled = false;
+            }
+        });
+
+        newSupermarketInput.addEventListener('input', function() {
+            if (newSupermarketInput.value) {
+                existingSupermarketSelect.value = '';
+                existingSupermarketSelect.disabled = true;
+            } else {
+                existingSupermarketSelect.disabled = false;
+            }
+        });
+    });
+</script>
+{% endblock %}
