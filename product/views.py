@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect
 from .models import Product, Purchase, Brand, Supermarket
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.http import JsonResponse
 from .forms import CombinedAddSchrumpflationForm
+from django.views.decorators.http import require_GET
 
 def product_detail(request, product_id):
     product = Product.objects.get(id=product_id)
@@ -70,11 +72,14 @@ def add_purchase(request):
             if not supermarket and form.cleaned_data['new_supermarket']:
                 supermarket, created = Supermarket.objects.get_or_create(name=form.cleaned_data['new_supermarket'])
             
-            product = Product.objects.create(
-                name=form.cleaned_data['product_name'],
-                brand=brand,
-                product_type=form.cleaned_data['product_type']
-            )
+            product_name = form.cleaned_data['product_name']
+            product = Product.objects.filter(name=product_name).first()
+            if not product:
+                product = Product.objects.create(
+                    name=product_name,
+                    brand=brand,
+                    product_type=form.cleaned_data['new_product_type']
+                )
             
             Purchase.objects.create(
                 product=product,
@@ -91,3 +96,11 @@ def add_purchase(request):
         form = CombinedAddSchrumpflationForm()
 
     return render(request, 'product/add_purchase.html', {'form': form})
+
+@require_GET
+def autocomplete_products(request):
+    if 'term' in request.GET:
+        qs = Product.objects.filter(name__icontains=request.GET.get('term'))
+        products = list(qs.values_list('name', flat=True))
+        return JsonResponse(products, safe=False)
+    return JsonResponse([], safe=False)

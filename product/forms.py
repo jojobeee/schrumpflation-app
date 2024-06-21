@@ -22,12 +22,12 @@ class SupermarketForm(forms.ModelForm):
         fields = ['name']
 
 class CombinedAddSchrumpflationForm(forms.Form):
-    existing_brand = forms.ModelChoiceField(queryset=Brand.objects.all(), required=False, empty_label="Select an existing brand")
+    product_name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'id': 'product-name'}))
+    new_product_type = forms.CharField(max_length=100, required=False)
+    existing_brand = forms.ModelChoiceField(queryset=Brand.objects.all(), required=False, empty_label="Marke auswählen")
     new_brand = forms.CharField(max_length=100, required=False)
-    existing_supermarket = forms.ModelChoiceField(queryset=Supermarket.objects.all(), required=False, empty_label="Select an existing supermarket")
+    existing_supermarket = forms.ModelChoiceField(queryset=Supermarket.objects.all(), required=False, empty_label="Supermarkt auswählen")
     new_supermarket = forms.CharField(max_length=100, required=False)
-    product_name = forms.CharField(max_length=100)
-    product_type = forms.CharField(max_length=100)
     size = forms.DecimalField(max_digits=10, decimal_places=2)
     unit = forms.ChoiceField(choices=Purchase.UNIT_CHOICES)
     price = forms.DecimalField(max_digits=10, decimal_places=2)
