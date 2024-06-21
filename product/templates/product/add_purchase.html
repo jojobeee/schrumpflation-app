@@ -1,55 +1,59 @@
 {% extends 'product/base.html' %}
+{% load custom_filters %}
 
 {% block body %}
-<form method="post">
+<form method="post" class="container mt-5">
     {% csrf_token %}
-    <div>
-        <label for="product-name">Produktname:</label>
-        {{ form.product_name }}
+    <div class="mb-3">
+        <label for="product-name" class="form-label">Produktname:</label>
+        {{ form.product_name|add_class:"form-control" }}
     </div>
-    <div>
-        <label for="new_product_type">Produktart:</label>
-        {{ form.new_product_type }}
+    <div class="mb-3">
+        <label for="new_product_type" class="form-label">Produktart:</label>
+        {{ form.new_product_type|add_class:"form-control" }}
     </div>
-    <div>
-        <label for="existing_brand">Marke:</label>
-        {{ form.existing_brand }}
-        <label for="new_brand">oder neue Marke hinzufügen:</label>
-        {{ form.new_brand }}
+    <div class="mb-3">
+        <label for="existing_brand" class="form-label">Marke:</label>
+        {{ form.existing_brand|add_class:"form-select" }}
     </div>
-    <div>
-        <label for="existing_supermarket">Supermarkt:</label>
-        {{ form.existing_supermarket }}
-        <label for="new_supermarket">oder neuen Supermarkt hinzufügen:</label>
-        {{ form.new_supermarket }}
+    <div class="mb-3">
+        <label for="new_brand" class="form-label">oder neue Marke hinzufügen:</label>
+        {{ form.new_brand|add_class:"form-control" }}
     </div>
-    <div>
-        <label for="size">Größe:</label>
-        {{ form.size }}
+    <div class="mb-3">
+        <label for="existing_supermarket" class="form-label">Supermarkt:</label>
+        {{ form.existing_supermarket|add_class:"form-select" }}
     </div>
-    <div>
-        <label for="unit">Einheit:</label>
-        {{ form.unit }}
+    <div class="mb-3">
+        <label for="new_supermarket" class="form-label">oder neuen Supermarkt hinzufügen:</label>
+        {{ form.new_supermarket|add_class:"form-control" }}
     </div>
-    <div>
-        <label for="price">Preis:</label>
-        {{ form.price }}
+    <div class="mb-3">
+        <label for="size" class="form-label">Größe:</label>
+        {{ form.size|add_class:"form-control" }}
     </div>
-    <div>
-        <label for="currency">Währung:</label>
-        {{ form.currency }}
+    <div class="mb-3">
+        <label for="unit" class="form-label">Einheit:</label>
+        {{ form.unit|add_class:"form-control" }}
     </div>
-    <div>
-        <label for="purchase_date">Kaufdatum:</label>
-        {{ form.purchase_date }}
+    <div class="mb-3">
+        <label for="price" class="form-label">Preis:</label>
+        {{ form.price|add_class:"form-control" }}
     </div>
-    <button type="submit">Absenden</button>
+    <div class="mb-3">
+        <label for="currency" class="form-label">Währung:</label>
+        {{ form.currency|add_class:"form-select" }}
+    </div>
+    <div class="mb-3">
+        <label for="purchase_date" class="form-label">Kaufdatum:</label>
+        {{ form.purchase_date|add_class:"form-control" }}
+    </div>
+    <button type="submit" class="btn btn-primary">Absenden</button>
 </form>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <script>
-
     $(function() {
         $('#product-name').autocomplete({
             source: '{% url "product:autocomplete_products" %}',
