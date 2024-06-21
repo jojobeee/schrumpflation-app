@@ -1,14 +1,13 @@
 from django.shortcuts import render, redirect
-from .models import Product, Purchase
+from .models import Product, Purchase, Brand, Supermarket
 from django.db.models import Q
 from django.core.paginator import Paginator
-from .forms import PurchaseForm, ProductForm
-from .models import Product
+from .forms import CombinedAddSchrumpflationForm
 
 def product_detail(request, product_id):
     product = Product.objects.get(id=product_id)
     purchases = Purchase.objects.filter(product=product)
-    context = {'product': product,'purchases': purchases,}
+    context = {'product': product, 'purchases': purchases}
     return render(request, 'product/productDetail.html', context)
 
 def product_list(request):
@@ -59,14 +58,36 @@ def product_list(request):
     })
 
 def add_purchase(request):
-    product_form = ProductForm()
-    purchase_form = PurchaseForm()
     if request.method == 'POST':
-        if product_form.is_valid() and purchase_form.is_valid():
-            product = product_form.save()
-            purchase = purchase_form.save(commit=False)
-            purchase.product = product
-            purchase.save()
-            return redirect('product:index') 
-        
-    return render(request, 'product/add_purchase.html', {'product_form': product_form, 'purchase_form': purchase_form})
+        form = CombinedAddSchrumpflationForm(request.POST)
+        if form.is_valid():
+
+            brand = form.cleaned_data['existing_brand']
+            if not brand and form.cleaned_data['new_brand']:
+                brand, created = Brand.objects.get_or_create(name=form.cleaned_data['new_brand'])
+            
+            supermarket = form.cleaned_data['existing_supermarket']
+            if not supermarket and form.cleaned_data['new_supermarket']:
+                supermarket, created = Supermarket.objects.get_or_create(name=form.cleaned_data['new_supermarket'])
+            
+            product = Product.objects.create(
+                name=form.cleaned_data['product_name'],
+                brand=brand,
+                product_type=form.cleaned_data['product_type']
+            )
+            
+            Purchase.objects.create(
+                product=product,
+                supermarket=supermarket,
+                size=form.cleaned_data['size'],
+                unit=form.cleaned_data['unit'],
+                price=form.cleaned_data['price'],
+                currency=form.cleaned_data['currency'],
+                purchase_date=form.cleaned_data['purchase_date']
+            )
+            
+            return redirect('product:index')
+    else:
+        form = CombinedAddSchrumpflationForm()
+
+    return render(request, 'product/add_purchase.html', {'form': form})

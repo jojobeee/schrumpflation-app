@@ -3,8 +3,91 @@
 {% block body %}
 <form method="post">
     {% csrf_token %}
-    {{ product_form }}
-    {{ purchase_form }}
+    <div>
+        <label for="product_name">Product Name:</label>
+        {{ form.product_name }}
+    </div>
+    <div>
+        <label for="product_type">Product Type:</label>
+        {{ form.product_type }}
+    </div>
+    <div>
+        <label for="existing_brand">Existing Brand:</label>
+        {{ form.existing_brand }}
+        <label for="new_brand">Or Add New Brand:</label>
+        {{ form.new_brand }}
+    </div>
+    <div>
+        <label for="existing_supermarket">Existing Supermarket:</label>
+        {{ form.existing_supermarket }}
+        <label for="new_supermarket">Or Add New Supermarket:</label>
+        {{ form.new_supermarket }}
+    </div>
+    <div>
+        <label for="size">Size:</label>
+        {{ form.size }}
+    </div>
+    <div>
+        <label for="unit">Unit:</label>
+        {{ form.unit }}
+    </div>
+    <div>
+        <label for="price">Price:</label>
+        {{ form.price }}
+    </div>
+    <div>
+        <label for="currency">Currency:</label>
+        {{ form.currency }}
+    </div>
+    <div>
+        <label for="purchase_date">Purchase Date:</label>
+        {{ form.purchase_date }}
+    </div>
     <button type="submit">Submit</button>
 </form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var newBrandInput = document.querySelector('[name="new_brand"]');
+    var existingBrandSelect = document.querySelector('[name="existing_brand"]');
+    var newSupermarketInput = document.querySelector('[name="new_supermarket"]');
+    var existingSupermarketSelect = document.querySelector('[name="existing_supermarket"]');
+
+    existingBrandSelect.addEventListener('change', function() {
+        if (existingBrandSelect.value) {
+            newBrandInput.value = '';
+            newBrandInput.disabled = true;
+        } else {
+            newBrandInput.disabled = false;
+        }
+    });
+
+    newBrandInput.addEventListener('input', function() {
+        if (newBrandInput.value) {
+            existingBrandSelect.value = '';
+            existingBrandSelect.disabled = true;
+        } else {
+            existingBrandSelect.disabled = false;
+        }
+    });
+
+    existingSupermarketSelect.addEventListener('change', function() {
+        if (existingSupermarketSelect.value) {
+            newSupermarketInput.value = '';
+            newSupermarketInput.disabled = true;
+        } else {
+            newSupermarketInput.disabled = false;
+        }
+    });
+
+    newSupermarketInput.addEventListener('input', function() {
+        if (newSupermarketInput.value) {
+            existingSupermarketSelect.value = '';
+            existingSupermarketSelect.disabled = true;
+        } else {
+            existingSupermarketSelect.disabled = false;
+        }
+    });
+});
+</script>
 {% endblock %}
