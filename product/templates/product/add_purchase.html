@@ -2,8 +2,26 @@
 {% load custom_filters %}
 
 {% block body %}
+
 <form method="post" class="container mt-5">
     {% csrf_token %}
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            {% for error in form.non_field_errors %}
+                <div>{{ error }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% for field in form %}
+        {% if field.errors %}
+            <div class="alert alert-danger">
+                {% for error in field.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endfor %}
     <div class="row mb-3">
         <div class="col-md-6">
             <label for="product-name" class="form-label">Produktname:</label>
