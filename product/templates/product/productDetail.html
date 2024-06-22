@@ -7,45 +7,56 @@
   <div class = "container">
     <h2>Brand: {{product.brand}}</h2>
     <p> </p>
-    {% render_table table %}
+      <div class="row">
+        <div class="col-md-6 custom-table-container">
+          {% render_table table %}
+        </div>
+        <div class="col-md-6">
+          <h2>Price per Kg or L Graph</h2>
+          <div id="priceGraph"></div>
+          <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+          <script>
+            var data = {{ graph_data|safe }};
+            console.log('Graph Data:', data);  // Check data received
 
+            // Extract dates and prices per Kg or L
+            var dates = data.map(item => item.purchase_date);
+            var pricesPerKgOrL = data.map(item => parseFloat(item.price_per_kg_or_l));
+
+            // Filter out NaN (invalid) prices
+            var validPrices = pricesPerKgOrL.filter(price => !isNaN(price));
+            console.log('Dates:', dates);
+            console.log('Prices per Kg or L:', validPrices);
+
+            // Create Plotly trace
+            var trace = {
+              x: dates,
+              y: validPrices,
+              type: 'scatter',
+              mode: 'lines+markers',
+              marker: { size: 8 }
+            };
+
+            // Plotly layout settings
+            var layout = {
+              title: 'Price per Kg or L over Time',
+              xaxis: { title: 'Date' },
+              yaxis: { title: 'Price per Kg or L' }
+            };
+
+            // Plot the graph
+            Plotly.newPlot('priceGraph', [trace], layout);
+          </script>
+
+
+
+
+        </div>
+      </div>
+
+
+
+  
   </div>
-
-  <h2>Price per Kg or L Graph</h2>
-  <div id="priceGraph"></div>
-
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  <script>
-    var data = {{ graph_data|safe }};
-  console.log('Graph Data:', data);  // Check data received
-
-  // Extract dates and prices per Kg or L
-  var dates = data.map(item => item.purchase_date);
-  var pricesPerKgOrL = data.map(item => parseFloat(item.price_per_kg_or_l));
-
-  // Filter out NaN (invalid) prices
-  var validPrices = pricesPerKgOrL.filter(price => !isNaN(price));
-  console.log('Dates:', dates);
-  console.log('Prices per Kg or L:', validPrices);
-
-  // Create Plotly trace
-  var trace = {
-    x: dates,
-    y: validPrices,
-    type: 'scatter',
-    mode: 'lines+markers',
-    marker: { size: 8 }
-  };
-
-  // Plotly layout settings
-  var layout = {
-    title: 'Price per Kg or L over Time',
-    xaxis: { title: 'Date' },
-    yaxis: { title: 'Price per Kg or L' }
-  };
-
-  // Plot the graph
-  Plotly.newPlot('priceGraph', [trace], layout);
-  </script>
 
 {% endblock %}
