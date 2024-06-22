@@ -51,7 +51,7 @@ class Purchase(models.Model):
             return None
 
     def __str__(self):
-        return f'{self.product.name} - {self.supermarket.name} - {self.purchase_date}'
+        return f'{self.product.name} - {self.supermarket.name} - {self.purchase_date} - {self.price_per_kg_or_l()}'
 
     @property
     def price_per_kg_or_l_display(self):

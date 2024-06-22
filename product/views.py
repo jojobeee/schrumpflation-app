@@ -19,7 +19,6 @@ def product_detail(request, product_id):
     
     context = {'product': product, 'table': table}
 
-
     return render(request, 'product/productDetail.html', context)
 
 def product_list(request):
