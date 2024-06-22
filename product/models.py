@@ -44,9 +44,9 @@ class Purchase(models.Model):
 
     def price_per_kg_or_l(self):
         if self.unit in ['kg', 'l']:
-            return self.price / self.size
+            return round(self.price / self.size, 2)
         elif self.unit in ['g', 'ml']:
-            return (self.price / self.size) * 1000
+            return round((self.price / self.size) * 1000, 2)
         else:
             return None
 
