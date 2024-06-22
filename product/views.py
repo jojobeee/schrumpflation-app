@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Product, Purchase
 from django.db.models import Q
 from django.core.paginator import Paginator
@@ -11,14 +11,19 @@ from .tables import PurchaseTable
 
 
 def product_detail(request, product_id):
-    product = Product.objects.get(id=product_id)
-    purchases = Purchase.objects.filter(product=product)
+    #product = Product.objects.get(id=product_id)
+    product = get_object_or_404(Product, id=product_id)
+    
+    #purchases = Purchase.objects.filter(product=product)
+    #purchases = get_object_or_404(Purchase, id=product_id)
 
-    queryset = Purchase.objects.all()
+    #queryset = Purchase.objects.all()
+    queryset = Purchase.objects.filter(product=product)
     table = PurchaseTable(queryset)
     RequestConfig(request).configure(table)
     
-    context = {'product': product,'purchases': purchases, 'table': table}
+    #context = {'product': product,'purchases': purchases, 'table': table}
+    context = {'product': product, 'table': table}
 
 
     return render(request, 'product/productDetail.html', context)
