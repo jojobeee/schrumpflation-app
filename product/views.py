@@ -22,7 +22,13 @@ def product_detail(request, product_id):
     table = PurchaseTable(queryset)
     RequestConfig(request).configure(table)
     
-    context = {'product': product, 'table': table}
+    purchases = Purchase.objects.filter(product=product).order_by('purchase_date')
+    graph_data = [{
+        'purchase_date': purchase.purchase_date.strftime('%Y-%m-%d'),
+        'price_per_kg_or_l': str(purchase.price_per_kg_or_l()),
+    } for purchase in purchases]
+
+    context = {'product': product, 'table': table, 'graph_data': graph_data}
 
     return render(request, 'product/productDetail.html', context)
 
