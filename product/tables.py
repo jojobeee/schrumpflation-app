@@ -7,5 +7,8 @@ class PurchaseTable(tables.Table):
         model = Purchase
         template_name = 'django_tables2/bootstrap.html'
         fields = ('product', 'supermarket', 'size', 'unit', 'price', 'currency', 'purchase_date')
+        order_by = 'purchase_date'
+
+  
 
  
