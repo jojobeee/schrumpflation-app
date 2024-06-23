@@ -39,7 +39,16 @@ def product_detail(request, product_id):
         change_s = ((newest_purchase.size - previous_purchase.size) / previous_purchase.size) * 100
         size_change = { 'previous_date': previous_purchase.purchase_date, 'newest_date': newest_purchase.purchase_date, 'change_s': round(change_s, 2)}
     
-    context = {'product': product, 'table': table, 'price_change': price_change, 'size_change': size_change, }
+    # Graph
+        graph_data = [{
+        'purchase_date': purchase.purchase_date.strftime('%Y-%m-%d'),
+        'price_per_kg_or_l': str(purchase.price_per_kg_or_l()),
+    } for purchase in purchases]
+
+    context = {'product': product, 'table': table, 'price_change': price_change, 'size_change': size_change, 'graph_data': graph_data}
+
+    #purchases = Purchase.objects.filter(product=product).order_by('purchase_date')
+    #context = {'product': product, 'table': table, 'graph_data': graph_data}
 
     return render(request, 'product/productDetail.html', context)
 
