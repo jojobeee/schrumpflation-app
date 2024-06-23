@@ -30,11 +30,18 @@ def product_detail(request, product_id):
     if purchases.exists() and purchases.count() > 1:
         oldest_purchase = purchases.first()
         newest_purchase = purchases.last()
-        change = ((newest_purchase.price - oldest_purchase.price) / oldest_purchase.price) * 100
-        price_change = { 'oldest_date': oldest_purchase.purchase_date, 'newest_date': newest_purchase.purchase_date, 'change': round(change, 2)}
+        change_p = ((newest_purchase.price - oldest_purchase.price) / oldest_purchase.price) * 100
+        price_change = { 'oldest_date': oldest_purchase.purchase_date, 'newest_date': newest_purchase.purchase_date, 'change_p': round(change_p, 2)}
     
+    # Berechnung der Groessenaenderung
+    size_change = None 
+    if purchases.exists() and purchases.count() > 1:
+        #oldest_purchase = purchases.first()
+        #newest_purchase = purchases.last()
+        change_s = ((newest_purchase.size - oldest_purchase.size) / oldest_purchase.size) * 100
+        size_change = { 'oldest_date': oldest_purchase.purchase_date, 'newest_date': newest_purchase.purchase_date, 'change_s': round(change_s, 2)}
     
-    context = {'product': product, 'table': table, 'price_change': price_change, }
+    context = {'product': product, 'table': table, 'price_change': price_change, 'size_change': size_change, }
 
     return render(request, 'product/productDetail.html', context)
 
