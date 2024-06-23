@@ -24,22 +24,20 @@ def product_detail(request, product_id):
     RequestConfig(request).configure(table)
 
     # Berechnung der Preisaenderung
-    purchases = Purchase.objects.filter(product=product).order_by('purchase_date')
+    purchases = Purchase.objects.filter(product=product).order_by('-purchase_date') # In absteigender Reihenfolge sortieren
     
     price_change = None 
-    if purchases.exists() and purchases.count() > 1:
-        oldest_purchase = purchases.first()
-        newest_purchase = purchases.last()
-        change_p = ((newest_purchase.price - oldest_purchase.price) / oldest_purchase.price) * 100
-        price_change = { 'oldest_date': oldest_purchase.purchase_date, 'newest_date': newest_purchase.purchase_date, 'change_p': round(change_p, 2)}
+    if purchases.count() >= 2:
+        previous_purchase = purchases[1]
+        newest_purchase = purchases[0]
+        change_p = ((newest_purchase.price - previous_purchase.price) / previous_purchase.price) * 100
+        price_change = { 'previous_date': previous_purchase.purchase_date, 'newest_date': newest_purchase.purchase_date, 'change_p': round(change_p, 2)}
     
     # Berechnung der Groessenaenderung
     size_change = None 
     if purchases.exists() and purchases.count() > 1:
-        #oldest_purchase = purchases.first()
-        #newest_purchase = purchases.last()
-        change_s = ((newest_purchase.size - oldest_purchase.size) / oldest_purchase.size) * 100
-        size_change = { 'oldest_date': oldest_purchase.purchase_date, 'newest_date': newest_purchase.purchase_date, 'change_s': round(change_s, 2)}
+        change_s = ((newest_purchase.size - previous_purchase.size) / previous_purchase.size) * 100
+        size_change = { 'previous_date': previous_purchase.purchase_date, 'newest_date': newest_purchase.purchase_date, 'change_s': round(change_s, 2)}
     
     context = {'product': product, 'table': table, 'price_change': price_change, 'size_change': size_change, }
 

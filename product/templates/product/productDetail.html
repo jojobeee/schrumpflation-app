@@ -4,7 +4,7 @@
 {% block body %}
 <h1>Product: {{product.name}}</h1>
 
-  <div class = "container">
+  <div class = "ms-3 mt-1">
     <h2>Brand: {{product.brand}}</h2>
     <p> </p>
     {% render_table table %}
@@ -14,22 +14,22 @@
   <div class="row mt-4">
     <div class="col-12">
         <h2>Price and size changes over time</h2>
-        {% if price_change.change_p > 02.00 %}
-            <p>Between {{ price_change.oldest_date }} and {{ price_change.newest_date }}, the <b>price</b> increased by {{ price_change.change_p }}%</p>
+        {% if price_change.change_p > 0.00 %}
+            <p>Between the last purchase ({{ price_change.previous_date }}) and this purchase ({{ price_change.newest_date }}), the <b>price</b> increased by {{ price_change.change_p }}%</p>
         {% elif price_change.change_p < 0.00 %}
-            <p>Between {{ price_change.oldest_date }} and {{ price_change.newest_date }}, the <b>price</b> decreased by {{ price_change.change_p }}%</p>
+            <p>Between the last purchase ({{ price_change.previous_date }}) and this purchase ({{ price_change.newest_date }}), the <b>price</b> decreased by {{ price_change.change_p }}%</p>
         {% elif price_change.change_p == 0.00 %}
-            <p>Between {{ price_change.oldest_date }} and {{ price_change.newest_date }}, the <b>price</b> remained the same.</p>
+            <p>Between the last purchase ({{ price_change.previous_date }}) and this purchase ({{ price_change.newest_date }}), the <b>price</b> remained the same.</p>
         {% else %}
             <p>Not enough data to calculate <b>price</b> change.</p>
         {% endif %}
 
-      {% if size_change.change_s > 02.00 %}
-          <p>Between {{ size_change.oldest_date }} and {{ size_change.newest_date }}, the <b>size</b> increased by {{ size_change.change_s }}%</p>
+      {% if size_change.change_s > 0.00 %}
+          <p>The <b>size</b> of the packaging increased by {{ size_change.change_s }}%</p>
       {% elif size_change.change_s < 0.00 %}
-          <p>Between {{ size_change.oldest_date }} and {{ size_change.newest_date }}, the <b>size</b> decreased by {{ size_change.change_s }}%</p>
+          <p>The <b>size</b> of the packaging decreased by {{ size_change.change_s }}%</p>
       {% elif size_change.change_s == 0.00 %}
-          <p>Between {{ size_change.oldest_date }} and {{ size_change.newest_date }}, the <b>size</b> remained the same.</p>
+          <p>The <b>size</b> of the packaging remained the same.</p>
       {% else %}
           <p>Not enough data to calculate <b>size</b> change.</p>
       {% endif %}
