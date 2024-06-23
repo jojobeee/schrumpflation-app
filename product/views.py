@@ -18,17 +18,37 @@ from .tables import PurchaseTable
 def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
 
+    # Abfrage für Tabelle erstellen
     queryset = Purchase.objects.filter(product=product)
     table = PurchaseTable(queryset)
     RequestConfig(request).configure(table)
+
+    # Berechnung der Preisaenderung
+    purchases = Purchase.objects.filter(product=product).order_by('-purchase_date') # In absteigender Reihenfolge sortieren
     
-    purchases = Purchase.objects.filter(product=product).order_by('purchase_date')
-    graph_data = [{
+    price_change = None 
+    if purchases.count() >= 2:
+        previous_purchase = purchases[1]
+        newest_purchase = purchases[0]
+        change_p = ((newest_purchase.price - previous_purchase.price) / previous_purchase.price) * 100
+        price_change = { 'previous_date': previous_purchase.purchase_date, 'newest_date': newest_purchase.purchase_date, 'change_p': round(change_p, 2)}
+    
+    # Berechnung der Groessenaenderung
+    size_change = None 
+    if purchases.exists() and purchases.count() > 1:
+        change_s = ((newest_purchase.size - previous_purchase.size) / previous_purchase.size) * 100
+        size_change = { 'previous_date': previous_purchase.purchase_date, 'newest_date': newest_purchase.purchase_date, 'change_s': round(change_s, 2)}
+    
+    # Graph
+        graph_data = [{
         'purchase_date': purchase.purchase_date.strftime('%Y-%m-%d'),
         'price_per_kg_or_l': str(purchase.price_per_kg_or_l()),
     } for purchase in purchases]
 
-    context = {'product': product, 'table': table, 'graph_data': graph_data}
+    context = {'product': product, 'table': table, 'price_change': price_change, 'size_change': size_change, 'graph_data': graph_data}
+
+    #purchases = Purchase.objects.filter(product=product).order_by('purchase_date')
+    #context = {'product': product, 'table': table, 'graph_data': graph_data}
 
     return render(request, 'product/productDetail.html', context)
 
