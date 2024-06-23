@@ -18,11 +18,23 @@ from .tables import PurchaseTable
 def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
 
+    # Abfrage für Tabelle erstellen
     queryset = Purchase.objects.filter(product=product)
     table = PurchaseTable(queryset)
     RequestConfig(request).configure(table)
+
+    # Berechnung der Preisaenderung
+    purchases = Purchase.objects.filter(product=product).order_by('purchase_date')
     
-    context = {'product': product, 'table': table}
+    price_change = None 
+    if purchases.exists() and purchases.count() > 1:
+        oldest_purchase = purchases.first()
+        newest_purchase = purchases.last()
+        change = ((newest_purchase.price - oldest_purchase.price) / oldest_purchase.price) * 100
+        price_change = { 'oldest_date': oldest_purchase.purchase_date, 'newest_date': newest_purchase.purchase_date, 'change': round(change, 2)}
+    
+    
+    context = {'product': product, 'table': table, 'price_change': price_change, }
 
     return render(request, 'product/productDetail.html', context)
 
