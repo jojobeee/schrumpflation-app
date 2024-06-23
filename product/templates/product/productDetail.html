@@ -14,11 +14,16 @@
   <div class="row mt-4">
     <div class="col-12">
         <h2>Price changes over time</h2>
-        {% if price_change %}
-            <p>Between {{ price_change.oldest_date }} and {{ price_change.newest_date }} the price changed by: {{ price_change.change }}%</p>
+        {% if price_change.change > 02.00 %}
+            <p>Between {{ price_change.oldest_date }} and {{ price_change.newest_date }}, the price increased by: {{ price_change.change }}%</p>
+        {% elif price_change.change < 0.00 %}
+            <p>Between {{ price_change.oldest_date }} and {{ price_change.newest_date }}, the price decreased by: {{ price_change.change }}%</p>
+        {% elif price_change.change == 0.00 %}
+            <p>Between {{ price_change.oldest_date }} and {{ price_change.newest_date }}, the price remained the same.</p>
         {% else %}
             <p>Not enough data to calculate price change.</p>
         {% endif %}
+
     </div>
   </div>  
 
