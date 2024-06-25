@@ -9,10 +9,7 @@ class PurchaseTable(tables.Table):
         template_name = 'django_tables2/bootstrap.html'
         fields = ('purchase_date', 'supermarket', 'size', 'unit', 'price', 'currency', 'price_per_kg_or_l')
         order_by = 'purchase_date'
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        
+       
     def render_price_per_kg_or_l(self, value, record):
         return record.price_per_kg_or_l()
 

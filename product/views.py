@@ -35,7 +35,14 @@ def product_detail(request, product_id):
             price_per_kg_or_l = tables.Column(verbose_name=column_title)
 
             class Meta(PurchaseTable.Meta):
-                pass
+                #pass
+                model = Purchase
+                template_name = 'django_tables2/bootstrap.html'
+                fields = ('purchase_date', 'supermarket', 'size', 'unit', 'price', 'currency', 'price_per_kg_or_l')
+                order_by = 'purchase_date'
+
+            def render_price_per_kg_or_l(self, value, record):
+                return record.price_per_kg_or_l()
 
         table = CustomPurchaseTable(queryset)
     else:
@@ -76,9 +83,6 @@ def product_detail(request, product_id):
     } for purchase in purchases]
 
     context = {'product': product, 'table': table, 'price_change': price_change, 'size_change': size_change, 'graph_data': graph_data}
-
-    #purchases = Purchase.objects.filter(product=product).order_by('purchase_date')
-    #context = {'product': product, 'table': table, 'graph_data': graph_data}
 
     return render(request, 'product/productDetail.html', context)
 
