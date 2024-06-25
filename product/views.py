@@ -20,7 +20,27 @@ def product_detail(request, product_id):
 
     # Abfrage für Tabelle erstellen
     queryset = Purchase.objects.filter(product=product)
-    table = PurchaseTable(queryset)
+    
+    # Dynamische Spaltentitel
+    if queryset:
+        first_record = queryset[0]
+        if first_record.unit in ['kg', 'g']:
+            column_title = 'Preis pro Kilo'
+        elif first_record.unit in ['l', 'ml']:
+            column_title = 'Preis pro Liter'
+        else:
+            column_title = 'Preis pro Einheit'
+
+        class CustomPurchaseTable(PurchaseTable):
+            price_per_kg_or_l = tables.Column(verbose_name=column_title)
+
+            class Meta(PurchaseTable.Meta):
+                pass
+
+        table = CustomPurchaseTable(queryset)
+    else:
+        table = PurchaseTable(queryset)
+        
     RequestConfig(request).configure(table)
 
     # Berechnung der Preisaenderung
