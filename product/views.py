@@ -160,7 +160,9 @@ def product_details(request):
         if product:
             return JsonResponse({
                 'product_type': product.product_type,
-                'brand_id': product.brand.id if product.brand else None,  
-                'brand_name': product.brand.name if product.brand else ''  
+                'brand_id': product.brand.id if product.brand else None,
+                'brand_name': product.brand.name if product.brand else '',
+                'unit': product.unit
             })
     return JsonResponse({}, status=400)
+
