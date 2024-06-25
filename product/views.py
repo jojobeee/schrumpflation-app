@@ -118,14 +118,14 @@ def add_purchase(request):
                 product = Product.objects.create(
                     name=product_name,
                     brand=brand,
-                    product_type=form.cleaned_data['new_product_type']
+                    product_type=form.cleaned_data['new_product_type'],
+                    unit=form.cleaned_data['unit']
                 )
             
             Purchase.objects.create(
                 product=product,
                 supermarket=supermarket,
                 size=form.cleaned_data['size'],
-                unit=form.cleaned_data['unit'],
                 price=form.cleaned_data['price'],
                 currency=form.cleaned_data['currency'],
                 purchase_date=form.cleaned_data['purchase_date']
