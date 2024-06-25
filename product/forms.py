@@ -6,12 +6,12 @@ from django.core.exceptions import ValidationError
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'product_type']
+        fields = ['name', 'product_type', 'unit']
 
 class PurchaseForm(forms.ModelForm):
     class Meta:
         model = Purchase
-        fields = ['size', 'unit', 'price', 'currency', 'purchase_date']
+        fields = ['size', 'price', 'currency', 'purchase_date']
 
 class BrandForm(forms.ModelForm):
     class Meta:
@@ -31,7 +31,7 @@ class CombinedAddSchrumpflationForm(forms.Form):
     existing_supermarket = forms.ModelChoiceField(queryset=Supermarket.objects.all().order_by('name'), required=False, empty_label="Supermarkt auswählen")
     new_supermarket = forms.CharField(max_length=100, required=False)
     size = forms.DecimalField(max_digits=10, decimal_places=2)
-    unit = forms.ChoiceField(choices=Purchase.UNIT_CHOICES, initial='g')
+    unit = forms.ChoiceField(choices=Product.UNIT_CHOICES, initial='g')
     price = forms.DecimalField(max_digits=10, decimal_places=2)
     currency = forms.ChoiceField(choices=Purchase.CURRENCY_CHOICES, initial='EUR')
     purchase_date = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))
