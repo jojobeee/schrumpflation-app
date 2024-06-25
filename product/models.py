@@ -22,9 +22,7 @@ class Product(models.Model):
 
 class Purchase(models.Model):
     CURRENCY_CHOICES = [
-        ('USD', 'US Dollar'),
         ('EUR', 'Euro'),
-        ('GBP', 'British Pound'),
     ]
     
     UNIT_CHOICES = [
