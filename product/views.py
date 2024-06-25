@@ -31,13 +31,23 @@ def product_detail(request, product_id):
         previous_purchase = purchases[1]
         newest_purchase = purchases[0]
         change_p = ((newest_purchase.price - previous_purchase.price) / previous_purchase.price) * 100
-        price_change = { 'previous_date': previous_purchase.purchase_date, 'newest_date': newest_purchase.purchase_date, 'change_p': round(change_p, 2)}
+        change_p_flag = 0
+        # Negative Werte: - entfernen und Flag-Variable auf 1 setzen
+        if change_p < 0:
+            change_p = change_p * (-1)
+            change_p_flag = 1
+        price_change = { 'previous_date': previous_purchase.purchase_date, 'newest_date': newest_purchase.purchase_date, 'change_p': round(change_p, 2), 'change_p_flag': change_p_flag }
     
     # Berechnung der Groessenaenderung
     size_change = None 
     if purchases.exists() and purchases.count() > 1:
         change_s = ((newest_purchase.size - previous_purchase.size) / previous_purchase.size) * 100
-        size_change = { 'previous_date': previous_purchase.purchase_date, 'newest_date': newest_purchase.purchase_date, 'change_s': round(change_s, 2)}
+        change_s_flag = 0
+        # Negative Werte: - entfernen und Flag-Variable auf 1 setzen
+        if change_s < 0:
+            change_s = change_s * (-1)
+            change_s_flag = 1
+        size_change = { 'previous_date': previous_purchase.purchase_date, 'newest_date': newest_purchase.purchase_date, 'change_s': round(change_s, 2), 'change_s_flag': change_s_flag }
     
     # Graph
         graph_data = [{
