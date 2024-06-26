@@ -20,7 +20,36 @@ def product_detail(request, product_id):
 
     # Abfrage für Tabelle erstellen
     queryset = Purchase.objects.filter(product=product)
-    table = PurchaseTable(queryset)
+    
+    # Dynamische Spaltentitel
+    if queryset.exists():
+        #first_record = queryset[0]
+        #if first_record.unit in ['kg', 'g']:
+        if product.unit in ['kg', 'g']:
+            column_title = 'Preis pro Kilo'
+        #elif first_record.unit in ['l', 'ml']:
+        elif product.unit in ['l', 'ml']:
+            column_title = 'Preis pro Liter'
+        else:
+            column_title = 'Preis pro Einheit'
+
+        class CustomPurchaseTable(PurchaseTable):
+            price_per_kg_or_l = tables.Column(verbose_name=column_title)
+
+            class Meta(PurchaseTable.Meta):
+                #pass
+                model = Purchase
+                template_name = 'django_tables2/bootstrap.html'
+                fields = ('purchase_date', 'supermarket', 'size', 'product__unit', 'price', 'currency', 'price_per_kg_or_l')
+                order_by = 'purchase_date'
+
+            def render_price_per_kg_or_l(self, value, record):
+                return record.price_per_kg_or_l()
+
+        table = CustomPurchaseTable(queryset)
+    else:
+        table = PurchaseTable(queryset)
+     
     RequestConfig(request).configure(table)
 
     # Berechnung der Preisaenderung
@@ -31,7 +60,12 @@ def product_detail(request, product_id):
         previous_purchase = purchases[1]
         newest_purchase = purchases[0]
         change_p = ((newest_purchase.price - previous_purchase.price) / previous_purchase.price) * 100
-        price_change = { 'previous_date': previous_purchase.purchase_date, 'newest_date': newest_purchase.purchase_date, 'change_p': round(change_p, 2)}
+        change_p_flag = 0
+        # Negative Werte: - entfernen und Flag-Variable auf 1 setzen
+        if change_p < 0:
+            change_p = change_p * (-1)
+            change_p_flag = 1
+        price_change = { 'previous_date': previous_purchase.purchase_date, 'newest_date': newest_purchase.purchase_date, 'change_p': round(change_p, 2), 'change_p_flag': change_p_flag }
     
     # Berechnung der Groessenaenderung
     size_change = None 
@@ -39,8 +73,13 @@ def product_detail(request, product_id):
         previous_purchase = purchases[1]
         newest_purchase = purchases[0]
         change_s = ((newest_purchase.size - previous_purchase.size) / previous_purchase.size) * 100
-        size_change = { 'previous_date': previous_purchase.purchase_date, 'newest_date': newest_purchase.purchase_date, 'change_s': round(change_s, 2)}
-
+        change_s_flag = 0
+        # Negative Werte: - entfernen und Flag-Variable auf 1 setzen
+        if change_s < 0:
+            change_s = change_s * (-1)
+            change_s_flag = 1
+        size_change = { 'previous_date': previous_purchase.purchase_date, 'newest_date': newest_purchase.purchase_date, 'change_s': round(change_s, 2), 'change_s_flag': change_s_flag }
+    
     # Graph
     graph_data = []
 

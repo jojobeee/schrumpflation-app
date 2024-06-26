@@ -34,11 +34,11 @@ class Purchase(models.Model):
     ]
 
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    supermarket = models.ForeignKey(Supermarket, on_delete=models.CASCADE)
-    size = models.DecimalField(max_digits=10, decimal_places=2)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES)
-    purchase_date = models.DateField()
+    supermarket = models.ForeignKey(Supermarket, on_delete=models.CASCADE, verbose_name='Supermarkt')
+    size = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Größe')
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Preis')
+    currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name='Währung')
+    purchase_date = models.DateField(verbose_name='Kaufdatum')
 
     def price_per_kg_or_l(self):
         if self.product.unit in ['kg', 'l']:
@@ -49,7 +49,7 @@ class Purchase(models.Model):
             return None
 
     def __str__(self):
-        return f'{self.product.name} - {self.supermarket.name} - {self.price} - {self.purchase_date} - {self.price_per_kg_or_l()}'
+        return f'{self.product.name} - {self.supermarket.name} - {self.unit} - {self.price} - {self.purchase_date} - {self.price_per_kg_or_l()}'
 
     @property
     def price_per_kg_or_l_display(self):
