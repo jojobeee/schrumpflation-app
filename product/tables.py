@@ -2,7 +2,7 @@ import django_tables2 as tables
 from .models import Purchase
 
 class PurchaseTable(tables.Table):
-    product__unit = tables.Column(verbose_name='Unit')
+    product__unit = tables.Column(verbose_name='Einheit')
     price_per_kg_or_l = tables.Column()
 
     class Meta:

@@ -22,34 +22,34 @@ def product_detail(request, product_id):
     queryset = Purchase.objects.filter(product=product)
     
     # Dynamische Spaltentitel
-    # if queryset:
-    #     first_record = queryset[0]
-    #     if first_record.unit in ['kg', 'g']:
-    #         column_title = 'Preis pro Kilo'
-    #     elif first_record.unit in ['l', 'ml']:
-    #         column_title = 'Preis pro Liter'
-    #     else:
-    #         column_title = 'Preis pro Einheit'
+    if queryset.exists():
+        #first_record = queryset[0]
+        #if first_record.unit in ['kg', 'g']:
+        if product.unit in ['kg', 'g']:
+            column_title = 'Preis pro Kilo'
+        #elif first_record.unit in ['l', 'ml']:
+        elif product.unit in ['l', 'ml']:
+            column_title = 'Preis pro Liter'
+        else:
+            column_title = 'Preis pro Einheit'
 
-    #     class CustomPurchaseTable(PurchaseTable):
-    #         price_per_kg_or_l = tables.Column(verbose_name=column_title)
+        class CustomPurchaseTable(PurchaseTable):
+            price_per_kg_or_l = tables.Column(verbose_name=column_title)
 
-    #         class Meta(PurchaseTable.Meta):
-    #             #pass
-    #             model = Purchase
-    #             template_name = 'django_tables2/bootstrap.html'
-    #             fields = ('purchase_date', 'supermarket', 'size', 'unit', 'price', 'currency', 'price_per_kg_or_l')
-    #             order_by = 'purchase_date'
+            class Meta(PurchaseTable.Meta):
+                #pass
+                model = Purchase
+                template_name = 'django_tables2/bootstrap.html'
+                fields = ('purchase_date', 'supermarket', 'size', 'product__unit', 'price', 'currency', 'price_per_kg_or_l')
+                order_by = 'purchase_date'
 
-    #         def render_price_per_kg_or_l(self, value, record):
-    #             return record.price_per_kg_or_l()
+            def render_price_per_kg_or_l(self, value, record):
+                return record.price_per_kg_or_l()
 
-    #     table = CustomPurchaseTable(queryset)
-    # else:
-    #     table = PurchaseTable(queryset)
-
-    table = PurchaseTable(queryset) # später wieder löschen
-       
+        table = CustomPurchaseTable(queryset)
+    else:
+        table = PurchaseTable(queryset)
+     
     RequestConfig(request).configure(table)
 
     # Berechnung der Preisaenderung
