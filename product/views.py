@@ -1,4 +1,3 @@
-
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product, Purchase, Brand, Supermarket
 
@@ -8,7 +7,6 @@ from django.http import JsonResponse
 from .forms import CombinedAddSchrumpflationForm
 from django.views.decorators.http import require_GET
 
-from django_tables2 import SingleTableView
 import django_tables2 as tables
 from django_tables2 import RequestConfig
 
@@ -23,11 +21,8 @@ def product_detail(request, product_id):
     
     # Dynamische Spaltentitel
     if queryset.exists():
-        #first_record = queryset[0]
-        #if first_record.unit in ['kg', 'g']:
         if product.unit in ['kg', 'g']:
             column_title = 'Preis pro Kilo'
-        #elif first_record.unit in ['l', 'ml']:
         elif product.unit in ['l', 'ml']:
             column_title = 'Preis pro Liter'
         else:
@@ -37,7 +32,6 @@ def product_detail(request, product_id):
             price_per_kg_or_l = tables.Column(verbose_name=column_title)
 
             class Meta(PurchaseTable.Meta):
-                #pass
                 model = Purchase
                 template_name = 'django_tables2/bootstrap.html'
                 fields = ('purchase_date', 'supermarket', 'size', 'product__unit', 'price', 'currency', 'price_per_kg_or_l')
@@ -53,7 +47,7 @@ def product_detail(request, product_id):
     RequestConfig(request).configure(table)
 
     # Berechnung der Preisaenderung
-    purchases = Purchase.objects.filter(product=product).order_by('-purchase_date') # In absteigender Reihenfolge sortieren
+    purchases = Purchase.objects.filter(product=product).order_by('-purchase_date') # In absteigender Reihenfolge sortiert
     
     price_change = None 
     if purchases.count() >= 2:
@@ -80,7 +74,22 @@ def product_detail(request, product_id):
             change_s_flag = 1
         size_change = { 'previous_date': previous_purchase.purchase_date, 'newest_date': newest_purchase.purchase_date, 'change_s': round(change_s, 2), 'change_s_flag': change_s_flag }
     
-    # Graph
+    # Berechnung der prozentualen Aenderung des Wertes Preis/Menge
+    price_size_change = None 
+    if purchases.exists() and purchases.count() > 1:
+        previous_purchase = purchases[1]
+        newest_purchase = purchases[0]
+        previous_p_s = previous_purchase.price_per_kg_or_l()
+        newest_p_s = newest_purchase.price_per_kg_or_l()
+        change_p_s = ((newest_p_s - previous_p_s) / previous_p_s) * 100
+        change_p_s_flag = 0
+        # Negative Werte: - entfernen und Flag-Variable auf 1 setzen
+        if change_p_s < 0:
+            change_p_s = change_p_s * (-1)
+            change_p_s_flag = 1
+        price_size_change = { 'previous_date': previous_purchase.purchase_date, 'newest_date': newest_purchase.purchase_date, 'change_p_s': round(change_p_s, 2), 'change_p_s_flag': change_p_s_flag }
+    
+    # Graph für productDetail.html erstellen
     graph_data = []
 
     if purchases.exists():
@@ -89,7 +98,7 @@ def product_detail(request, product_id):
             'price_per_kg_or_l': str(purchase.price_per_kg_or_l()),
         } for purchase in purchases]
 
-    context = {'product': product, 'table': table, 'price_change': price_change, 'size_change': size_change, 'graph_data': graph_data}
+    context = {'product': product, 'table': table, 'price_change': price_change, 'size_change': size_change, 'price_size_change': price_size_change, 'graph_data': graph_data}
 
     return render(request, 'product/productDetail.html', context)
 
@@ -132,13 +141,48 @@ def product_list(request):
         Q(product_type__icontains=search_query)
     ).values_list('product_type', flat=True).distinct()
 
+
+    # Es sollen die fünf größten Shrumpflationswerte der erfassten Einkäufe ausgegeben werden
+    purchases = Purchase.objects.all()
+    shrinkflations = []
+
+    processed_products = set()  # Erstellen einer Sammlung, in der jedes Element (hier: Kaufelement) nur ein Mal vorkommen kann 
+
+    for purchase in purchases:
+        product = purchase.product
+        if product not in processed_products:  # Falls das Kaufelement noch nicht in der Liste ist, folgende Schritte ausführen
+            related_purchases = Purchase.objects.filter(product=product).order_by('-purchase_date') # In absteigender Reihenfolge sortiert
+            if related_purchases.count() > 1:
+                newest_purchase = related_purchases[0]
+                newest_p_s = newest_purchase.price_per_kg_or_l()
+                previous_purchase = related_purchases[1]
+                previous_p_s = previous_purchase.price_per_kg_or_l()
+                if previous_p_s > 0:
+                    shrinkflation_p_s = ((newest_p_s - previous_p_s) / previous_p_s) * 100
+                    shrinkflations.append({
+                        'product': product,
+                        'previous_date': previous_purchase.purchase_date,
+                        'newest_date': newest_purchase.purchase_date,
+                        'shrinkflation_p_s': round(shrinkflation_p_s, 2)
+                    })
+            processed_products.add(product)
+
+    # Sortieren der Schrumpflationswerte und Auswahl der Top 5
+    for i in range(len(shrinkflations)):
+        for j in range(i + 1, len(shrinkflations)):
+            if shrinkflations[i]['shrinkflation_p_s'] < shrinkflations[j]['shrinkflation_p_s']:
+                shrinkflations[i], shrinkflations[j] = shrinkflations[j], shrinkflations[i]
+    
+    largest_shrinkflations = shrinkflations[:5]
+
     return render(request, 'product/index.html', {
         'products': products,
         'brands': brands,
         'product_types': product_types,
         'selected_brand': brand_filter,
         'selected_product_type': product_type_filter,
-        'search_query': search_query
+        'search_query': search_query,
+        'largest_shrinkflations': largest_shrinkflations
     })
 
 

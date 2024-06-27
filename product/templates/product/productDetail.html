@@ -4,7 +4,7 @@
 {% block body %}
 <h1>Produkt: {{product.name}}</h1>
 
-  <div class = "ms-3 mt-1">
+  <div class= "ms-3 mt-1">
     <h2>Marke: {{product.brand}}</h2>
     <p> </p>
       <div class="row">
@@ -75,6 +75,17 @@
       {% else %}
           <p>Es liegen nicht genug Daten vor, um eine Veränderung der <b>Verpackungsgröße</b> zu bestimmen.</p>
       {% endif %}
+
+      {% if price_size_change.change_p_s > 0.00 and price_size_change.change_p_s_flag == 0 %}
+          <p>Die <b>Schrumpflation</b> beträgt <b><font color="red"> {{ price_size_change.change_p_s }}% </font></b>.</p>
+      {% elif price_size_change.change_p_s > 0.00  and price_size_change.change_p_s_flag == 1 %}
+          <p>Die <b>Schrumpflation</b> ist gegenläufig und beträgt <b><font color="green"> {{ price_size_change.change_p_s }}% </font></b>: SOFORT KAUFEN ;).</p>
+      {% elif price_size_change.change_p_s == 0.00 %}
+          <p>Es liegt keine <b>Schrumpflation</b> vor.</p>
+      {% else %}
+          <p>Es liegen nicht genug Daten vor, um eine Veränderung der <b>Schrumpflation</b> zu bestimmen.</p>
+      {% endif %}
+
     </div>
   </div>  
 

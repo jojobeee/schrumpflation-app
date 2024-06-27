@@ -117,6 +117,32 @@
   {% endif %}
 </div>
 
+<div class="container">
+  {% if largest_shrinkflations %}
+  <h2>Die fünf größten Schrumpflationen</h2>
+    <table class="table">
+      <thead>
+          <tr>
+            <th>Produktname</th>
+            <th>Vorheriges Kaufdatum</th>
+            <th>Neuestes Kaufdatum</th>
+            <th>Schrumpflation (%)</th>
+          </tr>
+      </thead>
+      <tbody>
+        {% for shrinkflation in largest_shrinkflations %}
+          <tr>
+            <td>{{ shrinkflation.product.name }}</td>
+            <td>{{ shrinkflation.previous_date }}</td>
+            <td>{{ shrinkflation.newest_date }}</td>
+            <td>{{ shrinkflation.shrinkflation_p_s}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+</div>
+
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const searchField = document.getElementById("searchField");
