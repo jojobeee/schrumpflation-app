@@ -146,11 +146,11 @@ def product_list(request):
     purchases = Purchase.objects.all()
     shrinkflations = []
 
-    processed_products = set()  # Erstellen einer Sammlung, in der jedes Element (hier: Kaufelement) nur ein Mal vorkommen kann 
+    products_set = set()  # Erstellen einer Sammlung, in der jedes Element (hier: Kaufelement) nur ein Mal vorkommen kann 
 
     for purchase in purchases:
         product = purchase.product
-        if product not in processed_products:  # Falls das Kaufelement noch nicht in der Liste ist, folgende Schritte ausführen
+        if product not in products_set:  # Falls das Kaufelement noch nicht in der Liste ist, folgende Schritte ausführen
             related_purchases = Purchase.objects.filter(product=product).order_by('-purchase_date') # In absteigender Reihenfolge sortiert
             if related_purchases.count() > 1:
                 newest_purchase = related_purchases[0]
@@ -165,7 +165,7 @@ def product_list(request):
                         'newest_date': newest_purchase.purchase_date,
                         'shrinkflation_p_s': round(shrinkflation_p_s, 2)
                     })
-            processed_products.add(product)
+            products_set.add(product)
 
     # Sortieren der Schrumpflationswerte und Auswahl der Top 5
     for i in range(len(shrinkflations)):

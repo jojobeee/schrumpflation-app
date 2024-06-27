@@ -127,6 +127,7 @@
             <th>Vorheriges Kaufdatum</th>
             <th>Neuestes Kaufdatum</th>
             <th>Schrumpflation (%)</th>
+            <th>Details</th>
           </tr>
       </thead>
       <tbody>
@@ -136,6 +137,11 @@
             <td>{{ shrinkflation.previous_date }}</td>
             <td>{{ shrinkflation.newest_date }}</td>
             <td>{{ shrinkflation.shrinkflation_p_s}}</td>
+            <td>
+              <a href="{% url 'product:product_detail' shrinkflation.product.id %}">
+                <i class="material-icons">arrow_forward</i>
+              </a>
+            </td>
           </tr>
         {% endfor %}
       </tbody>
