@@ -1,5 +1,7 @@
 {% extends 'product/base.html' %}
 {% block body %}
+
+<!-- Suchformular -->
 <form method="get" id="searchForm" class="me-5 ms-5 mt-5 pt-4">
   <div class="d-flex">
     <input class="form-control form-control-lg me-2" type="text" id="searchField" name="search" value="{{ search_query }}" placeholder="Suche nach Produktnamen oder Marken...">
@@ -34,9 +36,9 @@
     {% endif %}
   </div>
   {% endif %}
-
 </form>
 
+<!-- Tabelle mit erfassten Produkten -->
 <div class="me-5 ms-5 pe-5 ps-5">
   {% if products %}
   <table class="table">
@@ -64,6 +66,7 @@
     </tbody>
   </table>
 
+  <!-- Paginierung -->
   <nav aria-label="Page navigation example">
     <ul class="pagination">
       <li class="page-item {% if not products.has_previous %}disabled{% endif %}">
@@ -117,9 +120,11 @@
   {% endif %}
 </div>
 
+<!-- Die fünf größten Schrumpflationen ausgeben -->
 <div class="container">
   {% if largest_shrinkflations %}
   <h2>Die fünf größten Schrumpflationen</h2>
+    
     <table class="table">
       <thead>
           <tr>
@@ -149,6 +154,7 @@
   {% endif %}
 </div>
 
+<!-- EventListener für Suchfeld mit Button -->
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const searchField = document.getElementById("searchField");
