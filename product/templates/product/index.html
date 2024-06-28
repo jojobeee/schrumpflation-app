@@ -153,6 +153,7 @@
 </div>
 
 <!-- Disble Submitbutton des Suchfeldes, wenn nichts eingegeben in Suchfeld -->
+<!-- Submit des Formulars auslösen, wenn dropdown Option ausgewählt wird -->
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const searchField = document.getElementById("searchField");
@@ -165,6 +166,14 @@
     toggleButton();
 
     searchField.addEventListener("input", toggleButton);
+
+    document.querySelector('select[name="brand"]').addEventListener('change', function() {
+      document.getElementById('searchForm').submit();
+    });
+  
+    document.querySelector('select[name="product_type"]').addEventListener('change', function() {
+      document.getElementById('searchForm').submit();
+    });
   });
-</script>
+  </script>
 {% endblock %}
