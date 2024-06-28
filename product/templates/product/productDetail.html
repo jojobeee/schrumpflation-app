@@ -65,10 +65,16 @@
         
       <div class="row">
         <!-- Graph mit Preis/Verpackungsgröße über die Zeit -->
-        <div class="col-12">
+        {% if price_size_change.change_p_s >= 0.00 %}
+          <div class="col-12">
+            <h2> Entwicklung über die Zeit </h2>
+            <div id="priceGraph"></div>
+          </div>
+        {% else %}
           <h2> Entwicklung über die Zeit </h2>
-          <div id="priceGraph"></div>
-        </div>
+          <p>Es liegen nicht genug Daten vor, um eine Veränderung der <b>Schrumpflation</b> 
+            grafisch darzustellen.</p>
+        {% endif %}
       </div>
   </div>
 
@@ -92,7 +98,6 @@
     };
 
     var layout = {
-      title: 'Preis pro Kg oder L über die Zeit',
       xaxis: { title: 'Datum' },
       yaxis: { title: 'Preis pro Kg oder L' }
     };
