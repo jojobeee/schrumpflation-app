@@ -3,7 +3,7 @@ from product.models import Supermarket, Brand, Product, Purchase
 from datetime import date
 
 class Command(BaseCommand):
-    """ Datenbank mit Beispieldaten befüllen """
+    """Script zum Befüllen der Datenbank mit Beispieldaten"""
 
     help = 'Populate the database with sample data'
 

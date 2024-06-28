@@ -1,8 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-
-<head>
+<!-- Laden der statischen Dateien wie CSS und JavaScript für die Gestaltung und Funktionalität der Webseite --><head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Schrumpflation App</title>
@@ -13,7 +12,7 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="{% static 'product/style.css' %}">
 </head>
-
+<!-- Navbar -->
 <body class="bg-body-tertiary">
     <nav class="navbar navbar-dark bg-dark">
         <a href="{% url 'product:index' %}" class="navbar-brand ps-2">die Schrumpflationsapp</a>

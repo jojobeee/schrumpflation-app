@@ -50,7 +50,7 @@ class CombinedAddSchrumpflationForm(forms.Form):
     purchase_date = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))
 
     def clean(self):
-        # Prüfen, ob Felder Marke und Supermarkt ausgefüllt sind
+        # Prüfen, ob mindestens eins der jeweils zwei Felder für Marke und Supermarkt ausgefüllt sind und Rückgabe einer Fehlermeldung, falls nicht.
         cleaned_data = super().clean()
         
         existing_brand = cleaned_data.get('existing_brand')
