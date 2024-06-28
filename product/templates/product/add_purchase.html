@@ -5,6 +5,7 @@
 <form method="post" class="container mt-5">
   {% csrf_token %}
   
+  <!-- Warnmeldung -->
   {% if form.non_field_errors %}
   <div class="alert alert-danger">
     {% for error in form.non_field_errors %}
@@ -13,6 +14,7 @@
   </div>
   {% endif %}
   
+  <!-- Produktname und Produktart -->
   <div class="row mb-3">
     <div class="col-md-6">
       <label for="product-name" class="form-label">Produktname:</label>
@@ -25,6 +27,7 @@
       </div>
       {% endif %}
     </div>
+    
     <div class="col-md-6">
       <label for="new_product_type" class="form-label">Produktart:</label>
       <input type="text" id="new_product_type" name="new_product_type" class="form-control {% if form.new_product_type.errors %}is-invalid{% endif %}" value="{% if form.new_product_type.value %}{{ form.new_product_type.value }}{% endif %}" required />
@@ -38,6 +41,7 @@
     </div>
   </div>
   
+  <!-- Marke -->
   <div class="row mb-3">
     <div class="col-md-6">
       <label for="existing_brand" class="form-label">Marke:</label>
@@ -55,6 +59,7 @@
       </div>
       {% endif %}
     </div>
+    
     <div class="col-md-6">
       <label for="new_brand" class="form-label">oder neue Marke hinzufügen:</label>
       <input type="text" id="new_brand" name="new_brand" class="form-control {% if form.new_brand.errors %}is-invalid{% endif %}" value="{% if form.new_brand.value %}{{ form.new_brand.value }}{% endif %}" />
@@ -68,6 +73,7 @@
     </div>
   </div>
   
+  <!-- Supermarkt -->
   <div class="row mb-3">
     <div class="col-md-6">
       <label for="existing_supermarket" class="form-label">Supermarkt:</label>
@@ -85,6 +91,7 @@
       </div>
       {% endif %}
     </div>
+    
     <div class="col-md-6">
       <label for="new_supermarket" class="form-label">oder neuen Supermarkt hinzufügen:</label>
       <input type="text" id="new_supermarket" name="new_supermarket" class="form-control {% if form.new_supermarket.errors %}is-invalid{% endif %}" value="{% if form.new_supermarket.value %}{{ form.new_supermarket.value }}{% endif %}" />
@@ -98,6 +105,7 @@
     </div>
   </div>
   
+  <!-- Größe -->
   <div class="row mb-3">
     <div class="col-md-3">
       <label for="size" class="form-label">Größe:</label>
@@ -110,6 +118,8 @@
       </div>
       {% endif %}
     </div>
+    
+    <!-- Einheit -->
     <div class="col-md-3">
       <label for="unit" class="form-label">Einheit:</label>
       <select id="unit" name="unit" class="form-select {% if form.unit.errors %}is-invalid{% endif %}">
@@ -126,6 +136,8 @@
       </div>
       {% endif %}
     </div>
+    
+    <!-- Preis -->
     <div class="col-md-3">
       <label for="price" class="form-label">Preis:</label>
       <input type="number" step="0.01" id="price" name="price" class="form-control {% if form.price.errors %}is-invalid{% endif %}" value="{% if form.price.value %}{{ form.price.value }}{% endif %}" required />
@@ -137,6 +149,8 @@
       </div>
       {% endif %}
     </div>
+    
+    <!-- Währung -->
     <div class="col-md-3">
       <label for="currency" class="form-label">Währung:</label>
       <select id="currency" name="currency" class="form-select {% if form.currency.errors %}is-invalid{% endif %}">
@@ -151,7 +165,8 @@
       {% endif %}
     </div>
   </div>
-  
+ 
+  <!-- Kaufdatum -->
   <div class="row mb-3">
     <div class="col-md-6">
       <label for="purchase_date" class="form-label">Kaufdatum:</label>
@@ -166,11 +181,13 @@
     </div>
   </div>
   
+  <!-- Button "Abensende" -->
   <div class="text-center">
     <button type="submit" class="btn btn-primary mt-4 btn-lg">Absenden</button>
   </div>
 </form>
 
+<!-- Autocomplete -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <script>

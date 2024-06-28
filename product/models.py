@@ -1,18 +1,36 @@
 from django.db import models
 
 class Supermarket(models.Model):
+    """ Klasse Supermarkt 
+    Die Klasse enthält den Supermarktnamen.
+    """
+    
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
 
 class Brand(models.Model):
+    """ Klasse Marke 
+    Die Klasse enthält den Markennamen.
+    """
+    
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
 
 class Product(models.Model):
+    """ Klasse Produkt 
+    Es werden die möglichen Einheiten der
+    Verpackungsgröße definiert.
+    Die Klasse enthält: 
+    - Produktnamen
+    - Markennamen als Fremdschlüssel
+    - Produkttyp
+    - Einheit
+    """
+    
     UNIT_CHOICES = [
         ('kg', 'Kilogramm'),
         ('g', 'Gramm'),
@@ -29,6 +47,18 @@ class Product(models.Model):
         return self.name
 
 class Purchase(models.Model):
+    """ Klasse Produktkauf 
+    Es die Währung definiert.
+    Die Klasse enthält: 
+    - Produkt als Fremdschlüssel
+    - Supermarkt als Fremdschlüssel
+    - Verpackungsgröße
+    - Preis des Produkts
+    - Währung
+    Es wird eine Funktion definiert, mit der
+    der Preis/Verpackungsgröße berechnet wird.
+    """
+    
     CURRENCY_CHOICES = [
         ('EUR', 'Euro'),
     ]
@@ -41,6 +71,7 @@ class Purchase(models.Model):
     purchase_date = models.DateField(verbose_name='Kaufdatum')
 
     def price_per_kg_or_l(self):
+        # Berechnet Preis/Verpackungsgröße
         if self.product.unit in ['kg', 'l']:
             return round(self.price / self.size, 2)
         elif self.product.unit in ['g', 'ml']:
@@ -51,6 +82,3 @@ class Purchase(models.Model):
     def __str__(self):
         return f'{self.product.name} - {self.supermarket.name} - {self.unit} - {self.price} - {self.purchase_date} - {self.price_per_kg_or_l()}'
 
-    @property
-    def price_per_kg_or_l_display(self):
-        return self.price_per_kg_or_l() if self.price_per_kg_or_l() is not None else 'N/A'
