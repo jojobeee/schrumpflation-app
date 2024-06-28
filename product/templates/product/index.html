@@ -47,7 +47,7 @@
         <th>Produktname</th>
         <th>Produktart</th>
         <th>Marke</th>
-        <th></th>
+        <th>Details</th>
       </tr>
     </thead>
     <tbody>
@@ -121,7 +121,7 @@
 </div>
 
 <!-- Die fünf größten Schrumpflationen ausgeben -->
-<div class="container">
+<div class="me-5 ms-5 pe-5 ps-5">
   {% if largest_shrinkflations %}
   <h2>Die fünf größten Schrumpflationen</h2>
     
@@ -129,7 +129,6 @@
       <thead>
           <tr>
             <th>Produktname</th>
-            <th>Vorheriges Kaufdatum</th>
             <th>Neuestes Kaufdatum</th>
             <th>Schrumpflation (%)</th>
             <th>Details</th>
@@ -139,7 +138,6 @@
         {% for shrinkflation in largest_shrinkflations %}
           <tr>
             <td>{{ shrinkflation.product.name }}</td>
-            <td>{{ shrinkflation.previous_date }}</td>
             <td>{{ shrinkflation.newest_date }}</td>
             <td>{{ shrinkflation.shrinkflation_p_s}}</td>
             <td>
