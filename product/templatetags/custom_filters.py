@@ -1,3 +1,4 @@
+# wird nicht mehr genutzt, kann aber genutzt werden, um Klassen zu Formularelementen hinzuzufügen
 from django import template
 
 register = template.Library()
