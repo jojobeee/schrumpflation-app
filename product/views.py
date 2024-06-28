@@ -311,9 +311,13 @@ def autocomplete_products(request):
         return JsonResponse(products, safe=False)
     return JsonResponse([], safe=False)
 
-
+@require_GET
 def product_details(request):
-    """ Überprüfen, ob ein Produkt bereits in der Datenbank ist
+    """ Sucht in der Datenbank nach einem Produkt,
+    das dem über den GET-Parameter 'product_name' übergebenen Namen entspricht
+    und gibt die Produktinformationen als JSON zurück. Diese werden benutzt, um
+    in add_purchase.html die Felder für Produkttyp, Marke und Einheit bei einem
+    bereits existierenden Produkt zu füllen.
     Der übergebene Parameter ist: request
     """
     product_name = request.GET.get('product_name', None)
